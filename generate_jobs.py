@@ -22,7 +22,7 @@ known_initial_types = [
 ]
 
 support_cluster_list = [
-    'nersc', 'nerscKNL', 'wsugrid', "OSG", "local", "guillimin", "McGill"
+    'nersc', 'nerscKNL', 'wsugrid', "OSG", "local", "guillimin", "McGill", "OSC"
 ]
 
 
@@ -84,6 +84,23 @@ def write_script_header(cluster, script, n_threads, event_id, walltime,
 
 cd {4:s}
 """.format(event_id, n_threads, mem, walltime, working_folder))
+    elif cluster == "OSC":
+        script.write("""#!/usr/bin/env bash
+#SBATCH -J {0:s}
+#SBATCH -N 1
+#SBATCH -n {1:d}
+#SBATCH --mem={2:.0f}G
+#SBATCH -e test.err
+#SBATCH -o test.log
+#SBATCH --mail-type=ALL
+#SBATCH --mail-user=du.458@osu.edu
+#SBATCH -t {3:s}
+#SBARCH -D {4:s}
+
+module load gcc-compatibility/10.3.0
+
+""".format(event_id, n_threads, mem, walltime, working_folder)
+        )
     elif cluster in ("local", "OSG"):
         script.write("#!/bin/bash")
     else:
@@ -157,12 +174,12 @@ wait
 
 
 def generate_full_job_script(cluster_name, folder_name, database, initial_type,
-                             n_hydro, ev0_id, n_urqmd, n_threads, ipglasma_flag,
+                             n_hydro, ev0_id, n_urqmd, n_threads, walltime, ipglasma_flag,
                              kompost_flag, hydro_flag, urqmd_flag, time_stamp):
     """This function generates full job script"""
     working_folder = folder_name
     event_id = working_folder.split('/')[-1]
-    walltime = '100:00:00'
+    #walltime = '100:00:00'
 
     script = open(path.join(working_folder, "submit_job.pbs"), "w")
     write_script_header(cluster_name, script, n_threads, event_id, walltime,
@@ -429,7 +446,7 @@ def generate_script_analyze_spvn(folder_name, cluster_name, HBT_flag):
 def generate_event_folders(initial_condition_database, initial_condition_type,
                            package_root_path, code_path, working_folder,
                            cluster_name, event_id, event_id_offset,
-                           n_hydro_per_job, n_urqmd_per_hydro, n_threads,
+                           n_hydro_per_job, n_urqmd_per_hydro, n_threads, walltime,
                            time_stamp, ipglasma_flag, kompost_flag, hydro_flag,
                            urqmd_flag, GMC_flag, HBT_flag):
     """This function creates the event folder structure"""
@@ -480,7 +497,7 @@ def generate_event_folders(initial_condition_database, initial_condition_type,
     generate_full_job_script(cluster_name, event_folder,
                              initial_condition_database, initial_condition_type,
                              n_hydro_per_job, event_id_offset,
-                             n_urqmd_per_hydro, n_threads, ipglasma_flag,
+                             n_urqmd_per_hydro, n_threads, walltime, ipglasma_flag,
                              kompost_flag, hydro_flag, urqmd_flag, time_stamp)
 
     if initial_condition_type == "IPGlasma+KoMPoST":
@@ -784,6 +801,11 @@ def main():
     sys.stdout.write("\b"*(toolbar_width + 1))
     event_id_offset = 0
     n_hydro_rescaled = n_hydro_per_job
+    
+    walltime = '10:00:00'
+    if "walltime" in parameter_dict.control_dict.keys():
+        walltime = parameter_dict.control_dict["walltime"]
+        
     for iev in range(n_jobs):
         progress_i = (int(float(iev + 1)/n_jobs*toolbar_width)
                       - int(float(iev)/n_jobs*toolbar_width))
@@ -824,7 +846,7 @@ def main():
                                initial_condition_type, code_package_path,
                                code_path, working_folder_name, cluster_name,
                                iev, event_id_offset, n_hydro_rescaled,
-                               n_urqmd_per_hydro, n_threads,
+                               n_urqmd_per_hydro, n_threads, walltime,
                                IPGlasma_time_stamp, ipglasma_flag, kompost_flag,
                                hydro_flag, urqmd_flag, GMC_flag, HBT_flag)
         event_id_offset += n_hydro_rescaled
@@ -841,9 +863,7 @@ def main():
         "codes/hadronic_afterburner_toolkit_code/ebe_scripts"))
     shutil.copy(path.join(script_path, 'average_event_spvn_h5.py'), pwd)
 
-    walltime = '10:00:00'
-    if "walltime" in parameter_dict.control_dict.keys():
-        walltime = parameter_dict.control_dict["walltime"]
+
     if cluster_name == "nersc":
         shutil.copy(
             path.join(code_package_path,
@@ -867,6 +887,11 @@ def main():
         shutil.copy(
             path.join(code_package_path,
                       'Cluster_supports/WSUgrid/submit_all_jobs.sh'), pwd)
+        
+    if cluster_name == "OSC":
+        shutil.copy(
+            path.join(code_package_path,
+                      'Cluster_supports/OSC/submit_all_jobs_OSC.sh'), pwd)
 
 
 if __name__ == "__main__":

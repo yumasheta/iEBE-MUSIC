@@ -12,20 +12,20 @@ esac
 number_of_cores_to_compile=$(( ${number_of_cores} > 10 ? 10 : ${number_of_cores} ))
 
 # compile 3dMCGlauber
-echo -e "${Green}compile 3dMCGlauber ... ${NC}"
-(
-    cd 3dMCGlauber_code
-    ./get_LHAPDF.sh
-    mkdir -p build
-    cd build
-    cmake .. -Dlink_with_lib=OFF
-    make -j${number_of_cores_to_compile}
-    make install
-)
-status=$?
-if [ $status -ne 0 ]; then
-    exit $status
-fi
+#echo -e "${Green}compile 3dMCGlauber ... ${NC}"
+#(
+#    cd 3dMCGlauber_code
+#    ./get_LHAPDF.sh
+#    mkdir -p build
+#    cd build
+#    cmake .. -Dlink_with_lib=OFF
+#    make -j${number_of_cores_to_compile}
+#    make install
+#)
+#status=$?
+#if [ $status -ne 0 ]; then
+#    exit $status
+#fi
 
 # compile IPGlasma
 echo -e "${Green}compile IPGlasma ... ${NC}"
@@ -39,15 +39,15 @@ if [ $status -ne 0 ]; then
 fi
 
 # compile KoMPoST
-echo -e "${Green}compile KoMPoST ... ${NC}"
-(
-    cd kompost_code
-    make
-)
-status=$?
-if [ $status -ne 0 ]; then
-    exit $status
-fi
+#echo -e "${Green}compile KoMPoST ... ${NC}"
+#(
+#    cd kompost_code
+#    make
+#)
+#status=$?
+#if [ $status -ne 0 ]; then
+#    exit $status
+#fi
 
 # compile MUSIC
 echo -e "${Green}compile MUSIC ... ${NC}"

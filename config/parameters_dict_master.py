@@ -195,6 +195,8 @@ music_dict = {
     'eta_rhob_0': 1.5,              # peak position of the net baryon density
     'eta_rhob_width_1': 0.2,        # Gaussian width for |eta| > |eta_0|
     'eta_rhob_width_2': 1.0,        # Gaussian width for |eta| < |eta_0|
+    
+    'yL_frac': 0.5,
 
     # read in initial conditions from external file (Initial_profile == 9x)
     'Initial_Distribution_input_filename': 'initial/epsilon-u-Hydro.dat',
