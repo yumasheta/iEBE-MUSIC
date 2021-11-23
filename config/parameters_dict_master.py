@@ -197,6 +197,13 @@ music_dict = {
     'eta_rhob_width_2': 1.0,        # Gaussian width for |eta| < |eta_0|
     
     'yL_frac': 0.5,
+    'initial_eta_profile': 1, # Hirano + Gaussian fall-off
+    'entropy_flag': 1, # initialize entropy
+    
+    'Initial_TA_Distribution_Filename': 'initial/initial_TA.dat',
+    'Initial_TB_Distribution_Filename': 'initial/initial_TB.dat',
+    'Initial_rhob_TA_Distribution_Filename': 'initial/initial_TA.dat',
+    'Initial_rhob_TB_Distribution_Filename': 'initial/initial_TB.dat',
 
     # read in initial conditions from external file (Initial_profile == 9x)
     'Initial_Distribution_input_filename': 'initial/epsilon-u-Hydro.dat',
