@@ -198,7 +198,7 @@ music_dict = {
     
     'yL_frac': 0.5,
     'initial_eta_profile': 1, # Hirano + Gaussian fall-off
-    'entropy_flag': 1, # initialize entropy
+    'initialize_with_entropy': 1, # initialize entropy
     
     'Initial_TA_Distribution_Filename': 'initial/initial_TA.dat',
     'Initial_TB_Distribution_Filename': 'initial/initial_TB.dat',

@@ -8,7 +8,7 @@
 # control parameters
 control_dict = {
     'initial_state_type': "3DMCGlauber_consttau",
-    'walltime': "5:00:00",         # walltime to run
+    'walltime': "6:00:00",         # walltime to run
     'save_hydro_surfaces': True,    # flag to save hydro surfaces
     'save_UrQMD_files': True,       # flag to save UrQMD files
 }
@@ -32,16 +32,16 @@ music_dict = {
 
     # parameters for the eta profiles in entropy density and net baryon density
     'ecm': 19.6,                    # collision energy
-    'Eta_plateau_size': 2.7,        # [-Eta_plateau_size/2, Eta_plateau_size/2] for entropy density
+    'Eta_plateau_size': 3.0,        # [-Eta_plateau_size/2, Eta_plateau_size/2] for entropy density
     'Eta_fall_off': 0.3,            # Gaussian width fall off for entropy density
-    'eta_rhob_0': 1.5,              # peak position of the net baryon density
-    'eta_rhob_width_1': 0.2,        # Gaussian width for |eta| > |eta_0|
-    'eta_rhob_width_2': 1.0,        # Gaussian width for |eta| < |eta_0|
+    'eta_rhob_0': 1.4,              # peak position of the net baryon density
+    'eta_rhob_width_1': 0.05,        # Gaussian width for |eta| > |eta_0|
+    'eta_rhob_width_2': 0.75,        # Gaussian width for |eta| < |eta_0|
     
     'yL_frac': 0.5,
     'initial_eta_profile': 1, # Hirano + Gaussian fall-off
-    'entropy_flag': 1, # initialize entropy
-    's_factor': 6.3,
+    'initialize_with_entropy': 1, # initialize entropy
+    's_factor': 7.0,
 
     'Initial_time_tau_0': 1.5,      # starting time of the hydrodynamic evolution (fm/c)
                                     # max(tau_overlap, tau_0)
@@ -56,25 +56,26 @@ music_dict = {
                                     # [-X_grid_size_in_fm/2, X_grid_size_in_fm/2]
     'Grid_size_in_x': 261,          # number of the grid points in x direction
     'Grid_size_in_y': 261,          # number of the grid points in y direction
-    'EOS_to_use': 14,               # type of the equation of state
+    'EOS_to_use': 12,               # type of the equation of state
                                     # 14: neos_BQS lattice EoS at finite mu_B
                                     # 17: BEST lattice EoS at finite mu_B
     # transport coefficients
     'Viscosity_Flag_Yes_1_No_0': 1,        # turn on viscosity in the evolution
     'Include_Shear_Visc_Yes_1_No_0': 1,    # include shear viscous effect
-    'Shear_to_S_ratio': 0.1,              # value of \eta/s
+    'Shear_to_S_ratio': 0.08,              # value of \eta/s
     'T_dependent_Shear_to_S_ratio': 0,     # flag to use temperature dep. \eta/s(T)
     'Include_Bulk_Visc_Yes_1_No_0': 0,     # include bulk viscous effect
     'Include_second_order_terms': 1,       # include second order non-linear coupling terms
-    'Include_vorticity_terms': 1,          # include vorticity coupling terms
+    'Include_vorticity_terms': 0,          # include vorticity coupling terms
     'Include_Rhob_Yes_1_No_0': 1,
-    'turn_on_baryon_diffusion': 0,
-    'kappa_coefficient': 0.4,
+    'turn_on_baryon_diffusion': 1,
+    'kappa_coefficient': 0.3,
 
     # parameters for freeze out and Cooper-Frye
+    'use_eps_for_freeze_out': 1,
     'N_freeze_out': 1,
-    'eps_freeze_max': 0.26,
-    'eps_freeze_min': 0.26,
+    'eps_freeze_max': 0.4,
+    'eps_freeze_min': 0.4,
 
     # switches to output evolution information
     'output_hydro_debug_info': 1,   # flag to output debug information
@@ -82,10 +83,10 @@ music_dict = {
     'output_movie_flag': 1,
     'output_evolution_T_cut': 0.145,
     'outputBinaryEvolution': 1,     # output evolution file in binary format
-    'output_evolution_every_N_eta': 1,  # output evolution file every Neta steps
-    'output_evolution_every_N_x':  2,   # output evolution file every Nx steps
-    'output_evolution_every_N_y': 2,    # output evolution file every Ny steps
-    'output_evolution_every_N_timesteps':1,  # output evolution every Ntime steps
+    'output_evolution_every_N_eta': 2,  # output evolution file every Neta steps
+    'output_evolution_every_N_x':  5,   # output evolution file every Nx steps
+    'output_evolution_every_N_y': 5,    # output evolution file every Ny steps
+    'output_evolution_every_N_timesteps':50,  # output evolution every Ntime steps
     'output_initial_density_profiles': 1,
 }
 
@@ -96,7 +97,7 @@ iss_dict = {
                                     # 2: read in 3D hydro surface
     'include_deltaf_shear': 1,      # include delta f contribution from shear
     'include_deltaf_bulk': 0,       # include delta f contribution from bulk
-    'include_deltaf_diffusion': 0,  # include delta f contribution from diffusion
+    'include_deltaf_diffusion': 1,  # include delta f contribution from diffusion
     'sample_upto_desired_particle_number': 1,  # 1: flag to run sampling until desired
                                                # particle numbers is reached
     'number_of_particles_needed': 100000,      # number of hadrons to sample
