@@ -327,8 +327,73 @@ def check_an_event_is_good(event_folder):
     return True
 
 
-def zip_results_into_hdf5(final_results_folder, event_id, para_dict):
-    """This function combines all the results into hdf5"""
+def zip_hydro_results_into_hdf5(final_results_folder, event_id):
+    """This function combines all the hydro results into hdf5"""
+    
+    hydro_info_filepattern = [
+        "eccentricities_evo_eta_*.dat", "momentum_anisotropy_eta_*.dat",
+        "inverse_Reynolds_number_eta_*.dat",
+        "averaged_phase_diagram_trajectory_*.dat",
+        "global_conservation_laws.dat", "global_angular_momentum_*.dat",
+        "vorticity_*.dat", "strings_*.dat",
+        "check_initial_density_profiles.dat",
+        "monitor_fluid_cell_ix_100_iy_100_ieta_0.dat"
+    ]
+    
+    curr_time = time.asctime()
+    print("[{}] Converting hydro results to hdf5".format(curr_time),
+              flush=True)
+    
+    hydro_results_file = path.join(final_results_folder,
+                                     "hydro_results_{}.h5".format(event_id))
+    
+    if path.exists(hydro_results_file):
+        print("{} exists ...".format(hydro_results_file), flush=True)
+    else:
+        hydrofolder = path.join(final_results_folder,
+                                "hydro_results_{}".format(event_id))
+        
+        # make 'hydro_h5_files' folder to host results going into h5 file
+        hydro_h5_folder = path.join(hydrofolder, "hydro_h5_files")
+
+        shutil.rmtree(hydro_h5_folder, ignore_errors=True) # Removes all the subdirectories!
+        mkdir(hydro_h5_folder)
+
+        # move hydro evolution results into 'hydro_h5_files' folder
+        for ipattern in hydro_info_filepattern:
+            hydro_info_list = glob(path.join(hydrofolder, ipattern))
+            for ihydrofile in hydro_info_list:
+                if path.isfile(ihydrofile):
+                    shutil.move(ihydrofile, hydro_h5_folder)
+
+        results_name = "hydro_results_{}".format(event_id)
+        hf = h5py.File("{0}.h5".format(results_name), "w")
+        gtemp = hf.create_group("{0}".format(results_name))
+        file_list = glob(path.join(hydro_h5_folder, "*"))
+        for file_path in file_list:
+            file_name = file_path.split("/")[-1]
+            print("Converting {} to hdf5".format(file_name),
+                  flush=True)
+            dtemp = np.loadtxt(file_path)
+            h5data = gtemp.create_dataset("{0}".format(file_name),
+                                          data=dtemp,
+                                          compression="gzip",
+                                          compression_opts=9)
+            # save header
+            ftemp = open(file_path, "r")
+            header_text = str(ftemp.readline())
+            ftemp.close()
+            if header_text.startswith("#"):
+                h5data.attrs.create("header", np.string_(header_text))
+        hf.close()
+        shutil.move("{}.h5".format(results_name), final_results_folder)
+        
+        # remove the original hydro results that have been zipped
+        shutil.rmtree(hydro_h5_folder, ignore_errors=True)
+
+
+def zip_spvn_results_into_hdf5(final_results_folder, event_id, para_dict):
+    """This function combines all the spvn results into hdf5"""
     results_name = "spvn_results_{}".format(event_id)
     time_stamp = para_dict['time_stamp_str']
     initial_state_filelist = [
@@ -341,16 +406,7 @@ def zip_results_into_hdf5(final_results_folder, event_id, para_dict):
     pre_equilibrium_filelist = [
         'ekt_tIn01_tOut08.music_init_flowNonLinear_pimunuTransverse.txt'
     ]
-    hydro_info_filepattern = [
-        "eccentricities_evo_eta_*.dat", "momentum_anisotropy_eta_*.dat",
-        "inverse_Reynolds_number_eta_*.dat",
-        "averaged_phase_diagram_trajectory_eta_*.dat",
-        "global_conservation_laws.dat", "global_angular_momentum_*.dat",
-        "vorticity_*.dat", "strings_*.dat"
-    ]
 
-    hydrofolder = path.join(final_results_folder,
-                            "hydro_results_{}".format(event_id))
     spvnfolder = path.join(final_results_folder, results_name)
 
     status = check_an_event_is_good(spvnfolder)
@@ -381,13 +437,6 @@ def zip_results_into_hdf5(final_results_folder, event_id, para_dict):
                     prefile = path.join(preeq_folder, prefilename)
                     if path.isfile(prefile):
                         shutil.move(prefile, spvnfolder)
-
-        # save hydro evolution information
-        for ipattern in hydro_info_filepattern:
-            hydro_info_list = glob(path.join(hydrofolder, ipattern))
-            for ihydrofile in hydro_info_list:
-                if path.isfile(ihydrofile):
-                    shutil.move(ihydrofile, spvnfolder)
 
         hf = h5py.File("{0}.h5".format(results_name), "w")
         gtemp = hf.create_group("{0}".format(results_name))
@@ -536,6 +585,8 @@ def main(para_dict_):
                 path.join(final_results_folder, hydro_folder_name,
                           "strings_{}.dat".format(event_id)))
 
+        zip_hydro_results_into_hdf5(final_results_folder, event_id)
+        
         # if hydro finishes properly, we continue to do hadronic transport
         prepare_surface_files_for_urqmd(final_results_folder, hydro_folder_name,
                                         n_urqmd)
@@ -554,7 +605,7 @@ def main(para_dict_):
                           event_id)
 
         # zip results into a hdf5 database
-        status = zip_results_into_hdf5(final_results_folder, event_id,
+        status = zip_spvn_results_into_hdf5(final_results_folder, event_id,
                                        para_dict_)
 
         # remove the unwanted outputs if event is finished properly

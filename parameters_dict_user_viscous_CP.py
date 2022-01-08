@@ -10,7 +10,7 @@ control_dict = {
     'initial_state_type': "3DMCGlauber_consttau",
     'walltime': "6:00:00",         # walltime to run
     'save_hydro_surfaces': True,    # flag to save hydro surfaces
-    'save_UrQMD_files': True,       # flag to save UrQMD files
+    'save_UrQMD_files': False,       # flag to save UrQMD files
 }
 
 
@@ -34,8 +34,8 @@ music_dict = {
     'ecm': 19.6,                    # collision energy
     'Eta_plateau_size': 3.0,        # [-Eta_plateau_size/2, Eta_plateau_size/2] for entropy density
     'Eta_fall_off': 0.3,            # Gaussian width fall off for entropy density
-    'eta_rhob_0': 1.4,              # peak position of the net baryon density
-    'eta_rhob_width_1': 0.05,        # Gaussian width for |eta| > |eta_0|
+    'eta_rhob_0': 1.40,              # peak position of the net baryon density
+    'eta_rhob_width_1': 0.1,        # Gaussian width for |eta| > |eta_0|
     'eta_rhob_width_2': 0.75,        # Gaussian width for |eta| < |eta_0|
     
     'yL_frac': 0.5,
@@ -62,14 +62,15 @@ music_dict = {
     # transport coefficients
     'Viscosity_Flag_Yes_1_No_0': 1,        # turn on viscosity in the evolution
     'Include_Shear_Visc_Yes_1_No_0': 1,    # include shear viscous effect
-    'Shear_to_S_ratio': 0.08,              # value of \eta/s
-    'T_dependent_Shear_to_S_ratio': 0,     # flag to use temperature dep. \eta/s(T)
-    'Include_Bulk_Visc_Yes_1_No_0': 0,     # include bulk viscous effect
+    'Shear_to_S_ratio': 0.06,              # value of \eta/s
+    'T_dependent_Shear_to_S_ratio': 1,     # flag to use temperature dep. \eta/s(T)
+    'Include_Bulk_Visc_Yes_1_No_0': 1,     # include bulk viscous effect
+    'T_dependent_Bulk_to_S_ratio': 1,      # 1. default, 2. duke, 3. sims
     'Include_second_order_terms': 1,       # include second order non-linear coupling terms
     'Include_vorticity_terms': 0,          # include vorticity coupling terms
     'Include_Rhob_Yes_1_No_0': 1,
     'turn_on_baryon_diffusion': 1,
-    'kappa_coefficient': 0.3,
+    'kappa_coefficient': 0.4,
 
     # parameters for freeze out and Cooper-Frye
     'use_eps_for_freeze_out': 1,
@@ -78,16 +79,16 @@ music_dict = {
     'eps_freeze_min': 0.4,
 
     # switches to output evolution information
-    'output_hydro_debug_info': 1,   # flag to output debug information
+    'output_hydro_debug_info': 0,   # flag to output debug information
     'output_evolution_data': 2,     # flag to output evolution history to file
-    'output_movie_flag': 1,
+    'output_movie_flag': 0,
     'output_evolution_T_cut': 0.145,
     'outputBinaryEvolution': 1,     # output evolution file in binary format
     'output_evolution_every_N_eta': 2,  # output evolution file every Neta steps
     'output_evolution_every_N_x':  5,   # output evolution file every Nx steps
     'output_evolution_every_N_y': 5,    # output evolution file every Ny steps
     'output_evolution_every_N_timesteps':50,  # output evolution every Ntime steps
-    'output_initial_density_profiles': 1,
+    'output_initial_density_profiles': 0,
 }
 
 
