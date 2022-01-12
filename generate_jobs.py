@@ -93,7 +93,7 @@ cd {4:s}
 #SBATCH -e test.err
 #SBATCH -o test.log
 #SBATCH --mail-type=ALL
-#SBATCH --mail-user=du.458@osu.edu
+#SBATCH --mail-user=lipei.du@mail.mcgill.ca
 #SBATCH -t {3:s}
 #SBARCH -D {4:s}
 

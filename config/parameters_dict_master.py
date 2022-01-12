@@ -197,6 +197,7 @@ music_dict = {
     'eta_rhob_width_2': 1.0,        # Gaussian width for |eta| < |eta_0|
     
     'yL_frac': 0.5,
+    'initial_rhob_shift': 0,
     'initial_eta_profile': 1, # Hirano + Gaussian fall-off
     'initialize_with_entropy': 1, # initialize entropy
     
@@ -208,6 +209,7 @@ music_dict = {
     # read in initial conditions from external file (Initial_profile == 9x)
     'Initial_Distribution_input_filename': 'initial/epsilon-u-Hydro.dat',
     's_factor': 0.190,      # normalization factor read in initial data file
+    'e_factor': 1.0,
 
     'Initial_time_tau_0': 0.4,          # starting time of the hydrodynamic evolution (fm/c)
     'Delta_Tau': 0.005,                 # time step to use in the evolution [fm/c]

@@ -10,33 +10,37 @@ control_dict = {
     'initial_state_type': "3DMCGlauber_consttau",
     'walltime': "5:00:00",         # walltime to run
     'save_hydro_surfaces': True,    # flag to save hydro surfaces
-    'save_UrQMD_files': True,       # flag to save UrQMD files
+    'save_UrQMD_files': False,       # flag to save UrQMD files
 }
 
 
 # 3DMCGlauber model
 mcglauber_dict = {
-    'database_name': "3DMCGlauber_database/MCGlbAuAu19.6_sigmaNN_gauss_d0p9",  # path for initial conditions
+    'database_name': "3DMCGlauber_database/MCGlbAuAu19.6",  # path for initial conditions
 }
 
 
 # MUSIC
 music_dict = {
-    'Initial_profile': 111,      # type of initial condition (11 or 111)
+    'Initial_profile': 14,      # type of initial condition (11 or 111)
                                 # 3dMCGlauber smooth initial condition based on
                                 # the nuclear thickness funciton TA and TB
-    'Initial_TA_Distribution_Filename': 'initial/initial_TA.dat',
-    'Initial_TB_Distribution_Filename': 'initial/initial_TB.dat',
+    'Initial_TA_Distribution_Filename': 'initial/initial_TB.dat',
+    'Initial_TB_Distribution_Filename': 'initial/initial_TA.dat',
+    'Initial_rhob_TA_Distribution_Filename': 'initial/initial_TB.dat',
+    'Initial_rhob_TB_Distribution_Filename': 'initial/initial_TA.dat',
 
     # parameters for the eta profiles in entropy density and net baryon density
     'ecm': 19.6,                    # collision energy
-    'Eta_plateau_size': 2.6,        # [-Eta_plateau_size/2, Eta_plateau_size/2] for entropy density
+    'Eta_plateau_size': 3.0,        # [-Eta_plateau_size/2, Eta_plateau_size/2] for entropy density
     'Eta_fall_off': 0.3,            # Gaussian width fall off for entropy density
-    'eta_rhob_0': 1.5,              # peak position of the net baryon density
-    'eta_rhob_width_1': 0.2,        # Gaussian width for |eta| > |eta_0|
-    'eta_rhob_width_2': 1.2,        # Gaussian width for |eta| < |eta_0|
+    'eta_rhob_0': 1.0,              # peak position of the net baryon density
+    'eta_rhob_width_1': 0.1,        # Gaussian width for |eta| > |eta_0|
+    'eta_rhob_width_2': 0.75,        # Gaussian width for |eta| < |eta_0|
     
     'yL_frac': 0.5,
+    'initial_rhob_shift': 1,
+    'e_factor': 4.76,
 
     'Initial_time_tau_0': 1.8,      # starting time of the hydrodynamic evolution (fm/c)
                                     # max(tau_overlap, tau_0)
@@ -107,4 +111,7 @@ hadronic_afterburner_toolkit_dict = {
     'flag_charge_dependence': 0,        # flag to compute charge dependence correlation
     'compute_corr_rap_dep': 0,      # flag to compute the rapidity dependent multi-particle correlation
     'resonance_weak_feed_down_flag': 0,     # include weak feed down contribution
+    'pT_min': 0.4,
+    'pT_max': 2.0,
+
 }
