@@ -330,7 +330,7 @@ export OMP_NUM_THREADS={0:d}
     script.close()
 
 
-def generate_script_afterburner(folder_name, cluster_name, HBT_flag, GMC_flag):
+def generate_script_afterburner(folder_name, cluster_name, HBT_flag, GMC_flag, NO_COLL_flag):
     """This function generates script for hadronic afterburner"""
     working_folder = folder_name
 
@@ -384,10 +384,19 @@ do
     fi
     mv fort.14 ../urqmd/OSCAR.input
     rm -fr ../iSS/OSCAR.DAT
+    """)
+    script.write("""
     cd ../urqmd
-    ./runqmd.sh >> run.log
+    """)
+    if NO_COLL_flag ==1:
+        script.write("./runqmd_nocoll.sh >> run.log")
+    else:
+        script.write("./runqmd.sh >> run.log""")
+    script.write("""
     mv particle_list.dat ../UrQMD_results/particle_list.dat
     rm -fr OSCAR.input
+    """)
+    script.write("""
     cd ..
     ../hadronic_afterburner_toolkit/convert_to_binary.e UrQMD_results/particle_list.dat
     rm -fr UrQMD_results/particle_list.dat
@@ -448,7 +457,7 @@ def generate_event_folders(initial_condition_database, initial_condition_type,
                            cluster_name, event_id, event_id_offset,
                            n_hydro_per_job, n_urqmd_per_hydro, n_threads, walltime,
                            time_stamp, ipglasma_flag, kompost_flag, hydro_flag,
-                           urqmd_flag, GMC_flag, HBT_flag):
+                           urqmd_flag, GMC_flag, HBT_flag, NO_COLL_flag):
     """This function creates the event folder structure"""
     event_folder = path.join(working_folder, 'event_%d' % event_id)
     param_folder = path.join(working_folder, 'model_parameters')
@@ -524,7 +533,7 @@ def generate_event_folders(initial_condition_database, initial_condition_type,
             path.join(event_folder, "MUSIC/{}".format(link_i))),
                         shell=True)
 
-    generate_script_afterburner(event_folder, cluster_name, HBT_flag, GMC_flag)
+    generate_script_afterburner(event_folder, cluster_name, HBT_flag, GMC_flag, NO_COLL_flag)
 
     generate_script_analyze_spvn(event_folder, cluster_name, HBT_flag)
 
@@ -828,6 +837,7 @@ def main():
         if cluster_name == "OSG":
             event_id_offset = osg_job_id
         GMC_flag = parameter_dict.iss_dict['global_momentum_conservation']
+        NO_COLL_flag = parameter_dict.urqmd_dict['run_collisionless']
         ipglasma_flag = False
         if (initial_condition_type in ("IPGlasma", "IPGlasma+KoMPoST")
                 and initial_condition_database == "self"):
@@ -848,7 +858,7 @@ def main():
                                iev, event_id_offset, n_hydro_rescaled,
                                n_urqmd_per_hydro, n_threads, walltime,
                                IPGlasma_time_stamp, ipglasma_flag, kompost_flag,
-                               hydro_flag, urqmd_flag, GMC_flag, HBT_flag)
+                               hydro_flag, urqmd_flag, GMC_flag, HBT_flag, NO_COLL_flag)
         event_id_offset += n_hydro_rescaled
     sys.stdout.write("\n")
     sys.stdout.flush()
