@@ -299,22 +299,23 @@ def run_spvn_analysis(urqmd_file_path, n_threads, final_results_folder,
 def check_an_event_is_good(event_folder):
     """This function checks the given event contains all required files"""
     required_files_list = [
-        'particle_9999_vndata_eta_-0.5_0.5.dat',
-        'particle_9999_vndata_diff_eta_0.5_2.dat',
-        'particle_9999_vndata_eta_-2_2.dat',
-        'particle_211_vndata_diff_y_-0.5_0.5.dat',
-        'particle_321_vndata_diff_y_-0.5_0.5.dat',
-        'particle_2212_vndata_diff_y_-0.5_0.5.dat',
-        'particle_-211_vndata_diff_y_-0.5_0.5.dat',
-        'particle_-321_vndata_diff_y_-0.5_0.5.dat',
-        'particle_-2212_vndata_diff_y_-0.5_0.5.dat',
-        'particle_3122_vndata_diff_y_-0.5_0.5.dat',
-        'particle_3312_vndata_diff_y_-0.5_0.5.dat',
-        'particle_3334_vndata_diff_y_-0.5_0.5.dat',
-        'particle_-3122_vndata_diff_y_-0.5_0.5.dat',
-        'particle_-3312_vndata_diff_y_-0.5_0.5.dat',
-        'particle_-3334_vndata_diff_y_-0.5_0.5.dat',
-        'particle_333_vndata_diff_y_-0.5_0.5.dat',
+	'particle_9999_dNdeta_pT_0.2_3.dat',
+        #'particle_9999_vndata_eta_-0.5_0.5_pT_0.2_3.dat',
+        #'particle_9999_vndata_diff_eta_0.5_2.dat',
+        #'particle_9999_vndata_eta_-2_2.dat',
+        #'particle_211_vndata_diff_y_-0.5_0.5.dat',
+        #'particle_321_vndata_diff_y_-0.5_0.5.dat',
+        #'particle_2212_vndata_diff_y_-0.5_0.5.dat',
+        #'particle_-211_vndata_diff_y_-0.5_0.5.dat',
+        #'particle_-321_vndata_diff_y_-0.5_0.5.dat',
+        #'particle_-2212_vndata_diff_y_-0.5_0.5.dat',
+        #'particle_3122_vndata_diff_y_-0.5_0.5.dat',
+        #'particle_3312_vndata_diff_y_-0.5_0.5.dat',
+        #'particle_3334_vndata_diff_y_-0.5_0.5.dat',
+        #'particle_-3122_vndata_diff_y_-0.5_0.5.dat',
+        #'particle_-3312_vndata_diff_y_-0.5_0.5.dat',
+        #'particle_-3334_vndata_diff_y_-0.5_0.5.dat',
+        #'particle_333_vndata_diff_y_-0.5_0.5.dat',
     ]
     event_file_list = glob(path.join(event_folder, "*"))
     for ifile in required_files_list:
@@ -332,12 +333,18 @@ def zip_hydro_results_into_hdf5(final_results_folder, event_id):
     
     hydro_info_filepattern = [
         "eccentricities_evo_eta_*.dat", "momentum_anisotropy_eta_*.dat",
+        "eccentricities_evo_ed_tau_*.dat", "momentum_anisotropy_tau_*.dat",
+	"eccentricities_evo_nB_tau_*.dat", "meanpT_estimators_tau_*.dat",
         "inverse_Reynolds_number_eta_*.dat",
         "averaged_phase_diagram_trajectory_*.dat",
         "global_conservation_laws.dat", "global_angular_momentum_*.dat",
         "vorticity_*.dat", "strings_*.dat",
         "check_initial_density_profiles.dat",
-        "monitor_fluid_cell_ix_100_iy_100_ieta_0.dat"
+        "monitor_fluid_cell_ix_100_iy_100_ieta_0.dat",
+	"meanpT_estimators_evolution.dat",
+	"momentum_anisotropy_evolution.dat",
+	"eccentricities_evolution_*.dat",
+	"vx_evolution.dat"
     ]
     
     curr_time = time.asctime()

@@ -198,6 +198,7 @@ music_dict = {
     
     'yL_frac': 0.5,
     'initial_rhob_shift': 0,
+    'symmetrize_rhob_profile': 0,
     'initial_eta_profile': 1, # Hirano + Gaussian fall-off
     'initialize_with_entropy': 1, # initialize entropy
     
@@ -210,6 +211,8 @@ music_dict = {
     'Initial_Distribution_input_filename': 'initial/epsilon-u-Hydro.dat',
     's_factor': 0.190,      # normalization factor read in initial data file
     'e_factor': 1.0,
+    'e_Norm': 1.15,
+    'rhob_Norm': 0.9,
 
     'Initial_time_tau_0': 0.4,          # starting time of the hydrodynamic evolution (fm/c)
     'Delta_Tau': 0.005,                 # time step to use in the evolution [fm/c]
@@ -388,6 +391,9 @@ iss_dict = {
                                 # if MC_sampling parameter is set to 2.
 }
 
+urqmd_dict = {
+    'run_collisionless': 0,         # flag to run afterburner without collisions
+}
 
 # hadronic afterburner toolkit
 hadronic_afterburner_toolkit_dict = {
@@ -428,6 +434,9 @@ hadronic_afterburner_toolkit_dict = {
     'pT_max': 4.05,     # the maximum value of transverse momentum (GeV)
     'rap_min': -0.5,    # minimum value of rapidity integration range for mid-rapidity observables 
     'rap_max': 0.5,     # maximum value of rapidity integration range for mid-rapidity observables 
+
+    'single_rapidity_bin_distribution': 1, # output pT-differential and pT-integrated distributions
+                              # in a specific rapidity bin
 
     'rap_type': 1,      # 0: for pseudo-rapidity; 1: for rapidity
     'rapidity_distribution': 1,   # 1: output particle rapidity distribution 
