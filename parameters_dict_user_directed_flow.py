@@ -22,27 +22,33 @@ mcglauber_dict = {
 
 # MUSIC
 music_dict = {
-    'Initial_profile': 14,      # type of initial condition (11 or 111)
-                                # 3dMCGlauber smooth initial condition based on
-                                # the nuclear thickness funciton TA and TB
+    'Initial_profile': 141,      # type of initial condition (11 or 111)
+                                 # 3dMCGlauber smooth initial condition based on
+                                 # the nuclear thickness funciton TA and TB
     'Initial_TA_Distribution_Filename': 'initial/initial_TB.dat',
     'Initial_TB_Distribution_Filename': 'initial/initial_TA.dat',
     'Initial_rhob_TA_Distribution_Filename': 'initial/initial_TB.dat',
     'Initial_rhob_TB_Distribution_Filename': 'initial/initial_TA.dat',
 
     # parameters for the eta profiles in entropy density and net baryon density
-    'ecm': 19.6,                    # collision energy
-    'Eta_plateau_size': 3.0,        # [-Eta_plateau_size/2, Eta_plateau_size/2] for entropy density
+    'ecm': 19.6,                     # collision energy
+    'Eta_plateau_size': 3.0,         # [-Eta_plateau_size/2, Eta_plateau_size/2] for entropy density
     'Eta_fall_off': 0.22,            # Gaussian width fall off for entropy density
-    'eta_rhob_0': 1.3,              # peak position of the net baryon density
-    'eta_rhob_width_1': 0.08,        # Gaussian width for |eta| > |eta_0|
-    'eta_rhob_width_2': 0.55,        # Gaussian width for |eta| < |eta_0|
+    'eta_rhob_0': 1.45,               # peak position of the net baryon density
+    'eta_rhob_width_1': 0.06,        # Gaussian width for |eta| > |eta_0|
+    'eta_rhob_width_2': 0.40,        # Gaussian width for |eta| < |eta_0|
+    'eta_rhob_plateau_size': 0.5,
+    'eta_rhob_fall_off': 0.1,
     
-    'yL_frac': 0.5,
-    'initial_rhob_shift': 0,
+    'Initial_baryon_profile': 2,
+    'central_baryon_frac': 0.15,
+    'initial_rhob_shift': 1,
+    'initial_energy_shift': 1,
     'symmetrize_rhob_profile': 0,
-    'e_factor': 0.0,		    # 4.76 for mN/hbarc
+    'yL_frac': 0.5,
+    'e_factor': 0.0,		         # 4.76 for mN/hbarc
     'e_Norm': 1.15,
+    's_factor': 6.0,
     'rhob_Norm': 0.9,
 
     'Initial_time_tau_0': 1.8,      # starting time of the hydrodynamic evolution (fm/c)
@@ -117,8 +123,8 @@ hadronic_afterburner_toolkit_dict = {
     'event_buffer_size': 100000,        # the number of events read in at once
     'compute_correlation': 0,           # flag to compute correlation function
     'flag_charge_dependence': 0,        # flag to compute charge dependence correlation
-    'single_rapidity_bin_distribution': 1, # output pT-differential and pT-integrated distributions
-                              # in a specific rapidity bin
+    'single_rapidity_bin_distribution': 1,  # output pT-differential and pT-integrated distributions
+                                            # in a specific rapidity bin
     'compute_corr_rap_dep': 0,      # flag to compute the rapidity dependent multi-particle correlation
     'resonance_weak_feed_down_flag': 0,     # include weak feed down contribution
 
