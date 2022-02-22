@@ -266,6 +266,43 @@ def run_urqmd_shell(n_urqmd, final_results_folder, event_id):
     return (urqmd_success, results_folder)
 
 
+def run_urqmd_shell_iS3D(n_urqmd, final_results_folder, event_id, is3d_continuous):
+    """This function runs urqmd events in parallel"""
+    logo = "\U0001F5FF"
+    urqmd_results_name = "particle_list_{}.gz".format(event_id)
+    continuous_results_name = "continuous_{}".format(event_id)
+    results_folder = path.join(final_results_folder, urqmd_results_name)
+    continuous_results_folder = path.join(final_results_folder, continuous_results_name)
+    urqmd_success = False
+
+    if path.exists(results_folder):
+        print("{} UrQMD results {} exist ... ".format(logo, urqmd_results_name),
+              flush=True)
+        urqmd_success = True
+
+    if not urqmd_success:
+        curr_time = time.asctime()
+        print("{}  [{}] Running UrQMD ... ".format(logo, curr_time), flush=True)
+        with Pool(processes=n_urqmd) as pool1:
+            pool1.map(run_urqmd_event, range(n_urqmd))
+
+        if is3d_continuous:
+            urqmd_success = True
+            shutil.move("UrQMDev_0/UrQMD_results/", continuous_results_folder)
+            return (urqmd_success, continuous_results_folder)
+            
+        else:
+            for iev in range(1, n_urqmd):
+                call("./hadronic_afterburner_toolkit/concatenate_binary_files.e "
+                     + "UrQMDev_0/UrQMD_results/particle_list.gz "
+                     + "UrQMDev_{}/UrQMD_results/particle_list.gz".format(iev),
+                     shell=True)
+            urqmd_success = True
+            shutil.move("UrQMDev_0/UrQMD_results/particle_list.gz", results_folder)
+
+            return (urqmd_success, results_folder)
+
+
 def run_spvn_analysis(urqmd_file_path, n_threads, final_results_folder,
                       event_id):
     """This function runs analysis"""
@@ -299,7 +336,7 @@ def run_spvn_analysis(urqmd_file_path, n_threads, final_results_folder,
 def check_an_event_is_good(event_folder):
     """This function checks the given event contains all required files"""
     required_files_list = [
-	'particle_9999_dNdeta_pT_0.2_3.dat',
+    	'particle_9999_dNdeta_pT_0.2_3.dat',
         #'particle_9999_vndata_eta_-0.5_0.5_pT_0.2_3.dat',
         #'particle_9999_vndata_diff_eta_0.5_2.dat',
         #'particle_9999_vndata_eta_-2_2.dat',
@@ -334,17 +371,17 @@ def zip_hydro_results_into_hdf5(final_results_folder, event_id):
     hydro_info_filepattern = [
         "eccentricities_evo_eta_*.dat", "momentum_anisotropy_eta_*.dat",
         "eccentricities_evo_ed_tau_*.dat", "momentum_anisotropy_tau_*.dat",
-	"eccentricities_evo_nB_tau_*.dat", "meanpT_estimators_tau_*.dat",
+	    "eccentricities_evo_nB_tau_*.dat", "meanpT_estimators_tau_*.dat",
         "inverse_Reynolds_number_eta_*.dat",
         "averaged_phase_diagram_trajectory_*.dat",
         "global_conservation_laws.dat", "global_angular_momentum_*.dat",
         "vorticity_*.dat", "strings_*.dat",
         "check_initial_density_profiles.dat",
         "monitor_fluid_cell_ix_100_iy_100_ieta_0.dat",
-	"meanpT_estimators_evolution.dat",
-	"momentum_anisotropy_evolution.dat",
-	"eccentricities_evolution_*.dat",
-	"vx_evolution.dat"
+    	"meanpT_estimators_evolution.dat",
+    	"momentum_anisotropy_evolution.dat",
+    	"eccentricities_evolution_*.dat",
+    	"vx_evolution.dat"
     ]
     
     curr_time = time.asctime()
@@ -511,8 +548,18 @@ def main(para_dict_):
         curr_time, num_threads),
           flush=True)
 
+    use_is3d = para_dict_['use_is3d']
+    is3d_continuous = para_dict_['is3d_continuous']
+    if use_is3d:
+        print("\U0001F3CE  [{}] Using iS3D as the sampler...".format(
+        curr_time), flush=True)
+    else:
+        print("\U0001F3CE  [{}] Using iSS as the sampler...".format(
+        curr_time), flush=True)
+
     idx0 = para_dict_['hydro_id0']
     nev = para_dict_['n_hydro']
+
     for iev in range(idx0, idx0 + nev):
         curr_time = time.asctime()
 
@@ -598,30 +645,44 @@ def main(para_dict_):
         prepare_surface_files_for_urqmd(final_results_folder, hydro_folder_name,
                                         n_urqmd)
 
-        # then run UrQMD events in parallel
-        urqmd_success, urqmd_file_path = run_urqmd_shell(
-            n_urqmd, final_results_folder, event_id)
-        if not urqmd_success:
-            print("\U000026D4  {} did not finsh properly, skipped.".format(
-                urqmd_file_path),
-                  flush=True)
-            continue
+        # afterburner
+        if not use_is3d: # use iSS
+            # then run UrQMD events in parallel
+            urqmd_success, urqmd_file_path = run_urqmd_shell(
+                n_urqmd, final_results_folder, event_id)
+            if not urqmd_success:
+                print("\U000026D4  {} did not finsh properly, skipped.".format(
+                    urqmd_file_path),
+                      flush=True)
+                continue
 
-        # finally collect results
-        run_spvn_analysis(urqmd_file_path, num_threads, final_results_folder,
-                          event_id)
+            # finally collect results
+            run_spvn_analysis(urqmd_file_path, num_threads, final_results_folder,
+                              event_id)
 
-        # zip results into a hdf5 database
-        status = zip_spvn_results_into_hdf5(final_results_folder, event_id,
-                                       para_dict_)
+            # zip results into a hdf5 database
+            status = zip_spvn_results_into_hdf5(final_results_folder, event_id,
+                                           para_dict_)
 
-        # remove the unwanted outputs if event is finished properly
-        if status:
-            remove_unwanted_outputs(final_results_folder, event_id,
-                                    para_dict_['save_ipglasma'],
-                                    para_dict_['save_kompost'],
-                                    para_dict_['save_hydro'],
-                                    para_dict_['save_urqmd'])
+            # remove the unwanted outputs if event is finished properly
+            if status:
+                remove_unwanted_outputs(final_results_folder, event_id,
+                                        para_dict_['save_ipglasma'],
+                                        para_dict_['save_kompost'],
+                                        para_dict_['save_hydro'],
+                                        para_dict_['save_urqmd'])
+        else: # use iS3D
+            urqmd_success, urqmd_file_path = run_urqmd_shell_iS3D(
+                n_urqmd, final_results_folder, event_id, is3d_continuous)
+            if not urqmd_success:
+                print("\U000026D4  {} did not finsh properly, skipped.".format(
+                    urqmd_file_path),
+                      flush=True)
+                continue
+            else:
+                print("\U0001F3CE  {} finshes properly.".format(
+                    urqmd_file_path),
+                      flush=True)
 
 
 if __name__ == "__main__":
@@ -636,8 +697,10 @@ if __name__ == "__main__":
         SAVE_KOMPOST = (sys.argv[8].lower() == "true")
         SAVE_HYDRO = (sys.argv[9].lower() == "true")
         SAVE_URQMD = (sys.argv[10].lower() == "true")
-        SEED_ADD = int(sys.argv[11])
-        TIME_STAMP = str(sys.argv[12])
+        USE_IS3D = (sys.argv[11].lower() == "true")
+        IS3D_CONTINUOUS = (sys.argv[12].lower() == "true")
+        SEED_ADD = int(sys.argv[13])
+        TIME_STAMP = str(sys.argv[14])
     except IndexError:
         print_usage()
         exit(0)
@@ -664,6 +727,8 @@ if __name__ == "__main__":
         'save_kompost': SAVE_KOMPOST,
         'save_hydro': SAVE_HYDRO,
         'save_urqmd': SAVE_URQMD,
+        'use_is3d': USE_IS3D,
+        'is3d_continuous': IS3D_CONTINUOUS,
         'seed_add': SEED_ADD,
         'time_stamp_str': TIME_STAMP,
     }

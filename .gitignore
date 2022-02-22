@@ -119,6 +119,8 @@ playground
 
 3DMCGlauber_database/*
 OSC*
+playground*
+sampler*
 results/
 submit_all_jobs.sh
 submit_all_jobs_OSC.sh
