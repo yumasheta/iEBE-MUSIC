@@ -452,7 +452,6 @@ rm -fr UrQMD_results/*
 for iev in `ls hydro_event | grep "surface"`
 do
     cd iS3D
-    rm -r results
     mkdir -p results
     """)
 
@@ -509,32 +508,32 @@ do
     """)
 
         script.write("""
-        cd ../osc2u
-        if [ $SubEventId = "0" ]; then
+    cd ../osc2u
+    if [ $SubEventId = "0" ]; then
         """)
-        script.write("    ./osc2u.e < ../iSS/OSCAR.DAT {0}".format(logfile))
+        script.write("./osc2u.e < ../iS3D/results/particle_list_osc.dat {0}".format(logfile))
         script.write("""
-        else
-            ./osc2u.e < ../iSS/OSCAR.DAT >> run.log
-        fi
-        mv fort.14 ../urqmd/OSCAR.input
-        rm -fr ../iSS/OSCAR.DAT
+    else
+        ./osc2u.e < ../iS3D/results/particle_list_osc.dat >> run.log
+    fi
+    mv fort.14 ../urqmd/OSCAR.input
+    rm -fr ../iS3D/results/particle_list_osc.dat
         """)
         script.write("""
-        cd ../urqmd
+    cd ../urqmd
         """)
         if NO_COLL_flag ==1:
             script.write("./runqmd_nocoll.sh >> run.log")
         else:
             script.write("./runqmd.sh >> run.log""")
         script.write("""
-        mv particle_list.dat ../UrQMD_results/particle_list.dat
-        rm -fr OSCAR.input
+    mv particle_list.dat ../UrQMD_results/particle_list.dat
+    rm -fr OSCAR.input
         """)
         script.write("""
-        cd ..
-        ../hadronic_afterburner_toolkit/convert_to_binary.e UrQMD_results/particle_list.dat
-        rm -fr UrQMD_results/particle_list.dat
+    cd ..
+    ../hadronic_afterburner_toolkit/convert_to_binary.e UrQMD_results/particle_list.dat
+    rm -fr UrQMD_results/particle_list.dat
     """)
     
     script.write("""

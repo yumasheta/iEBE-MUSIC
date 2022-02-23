@@ -290,7 +290,6 @@ def run_urqmd_shell_iS3D(n_urqmd, final_results_folder, event_id, is3d_continuou
             urqmd_success = True
             shutil.move("UrQMDev_0/UrQMD_results/", continuous_results_folder)
             return (urqmd_success, continuous_results_folder)
-            
         else:
             for iev in range(1, n_urqmd):
                 call("./hadronic_afterburner_toolkit/concatenate_binary_files.e "
@@ -674,6 +673,7 @@ def main(para_dict_):
         else: # use iS3D
             urqmd_success, urqmd_file_path = run_urqmd_shell_iS3D(
                 n_urqmd, final_results_folder, event_id, is3d_continuous)
+
             if not urqmd_success:
                 print("\U000026D4  {} did not finsh properly, skipped.".format(
                     urqmd_file_path),
@@ -683,6 +683,25 @@ def main(para_dict_):
                 print("\U0001F3CE  {} finshes properly.".format(
                     urqmd_file_path),
                       flush=True)
+
+            if not is3d_continuous:
+                print("\U0001F3CE Run spve analysis...",flush=True)
+
+                # finally collect results
+                run_spvn_analysis(urqmd_file_path, num_threads, final_results_folder,
+                                  event_id)
+
+                # zip results into a hdf5 database
+                status = zip_spvn_results_into_hdf5(final_results_folder, event_id,
+                                               para_dict_)
+
+                # remove the unwanted outputs if event is finished properly
+                if status:
+                    remove_unwanted_outputs(final_results_folder, event_id,
+                                            para_dict_['save_ipglasma'],
+                                            para_dict_['save_kompost'],
+                                            para_dict_['save_hydro'],
+                                            para_dict_['save_urqmd'])
 
 
 if __name__ == "__main__":

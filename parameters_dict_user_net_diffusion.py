@@ -110,58 +110,58 @@ iss_dict = {
 
 # iS3D
 is3d_dict = {
-    'operation': 1,                   # determines what iS3D calculates
-                                    #   0 = mean spacetime distribution dN/dX
-                                    #   1 = smooth momentum spectra dN/pTdpTdphidy
-                                    #   2 = sampled particle list (test_sampler = 0) or discrete spacetime/momentum distrbutions (test_sampler = 1)
+    'operation': 2,                   # determines what iS3D calculates
+                                      #   0 = mean spacetime distribution dN/dX
+                                      #   1 = smooth momentum spectra dN/pTdpTdphidy
+                                      #   2 = sampled particle list (test_sampler = 0) or discrete spacetime/momentum distrbutions (test_sampler = 1)
 
     'mode': 8,                        # file format of surface.dat to read in (your surface needs to match the correct format!)
-                                    #   1 = CPU VH or CPU VAH           (3+1d vh or vah)
-                                    #   5 = CPU VH w/ thermal vorticity (3+1d vh)
-                                    #   6 = MUSIC (public version)      (3+1d vh)
-                                    #   7 = HIC-EventGen                (2+1d vh)
+                                      #   1 = CPU VH or CPU VAH           (3+1d vh or vah)
+                                      #   5 = CPU VH w/ thermal vorticity (3+1d vh)
+                                      #   6 = MUSIC (public version)      (3+1d vh)
+                                      #   7 = HIC-EventGen                (2+1d vh)
 
     'surface_in_binary': 1,           # freeze-out surface in binary format for mode = 8
 
-    'only_use_partial_surface': 1,    # for example only interested in cells near mid-rapidity
+    'only_use_partial_surface': 0,    # for example only interested in cells near mid-rapidity
     'partial_surface_etas_min': -0.05,
     'partial_surface_etas_max': 0.05,
     'partial_surface_tau_min': 0.0,
     'partial_surface_tau_max': 2.05,
 
-    'hrg_eos': 3,                     # determines what PDG file to read in (chosen particles must be subset of selected PDG!)
-                                    #   1 = urqmd v3.3+     (goes up to n-2250)
-                                    #   2 = smash           (goes up to Υ(3S))
-                                    #   3 = smash box       (smash box: no decay info now, so can't do resdecays)   (what is this?)
+    'hrg_eos': 1,                     # determines what PDG file to read in (chosen particles must be subset of selected PDG!)
+                                      #   1 = urqmd v3.3+     (goes up to n-2250)
+                                      #   2 = smash           (goes up to Υ(3S))
+                                      #   3 = smash box       (smash box: no decay info now, so can't do resdecays)   (what is this?)
 
     'dimension': 3,                   # dimensionality of the freezeout surface
-                                    #   2 = boost-invariant 2+1d
-                                    #   3 = non boost-invariant 3+1d
+                                      #   2 = boost-invariant 2+1d
+                                      #   3 = non boost-invariant 3+1d
 
     'df_mode': 2,                     # df correction method
-                                    #   1 = Grad 14-moment approximation            (vh)
-                                    #   2 = RTA Chapman-Enskog expansion            (vh)
-                                    #   3 = PTM modified equilibrium distribution   (vh)
-                                    #   4 = PTB modified equilibrium distribution   (vh)
-                                    #   5 = Grad 14-moment approximation            (vah)
-                                    #   6 = RTA Chapman-Enskog expansion            (vah)
-                                    #   7 = PTM modified anisotropic distribution   (vah)
+                                      #   1 = Grad 14-moment approximation            (vh)
+                                      #   2 = RTA Chapman-Enskog expansion            (vh)
+                                      #   3 = PTM modified equilibrium distribution   (vh)
+                                      #   4 = PTB modified equilibrium distribution   (vh)
+                                      #   5 = Grad 14-moment approximation            (vah)
+                                      #   6 = RTA Chapman-Enskog expansion            (vah)
+                                      #   7 = PTM modified anisotropic distribution   (vah)
 
     'include_baryon': 1,              # switch to include baryon chemical potential
     'include_bulk_deltaf': 0,         # switch to include bulk viscous corrections
     'include_shear_deltaf': 0,        # switch to include shear viscous corrections (or residual shear for vah)
     'include_baryondiff_deltaf': 1,   # switch to include baryon diffusion corrections
 
-    'oversample': 1,                 # run sampler iteratively until mininum number of hadrons
-                                    # or max number of events sampled
+    'oversample': 1,                  # run sampler iteratively until mininum number of hadrons
+                                      # or max number of events sampled
 
     'min_num_hadrons': 1.0e+7,        # across all samples >= min_num_hadrons
     'max_num_samples': 1.0e+3,        # oversampling will finish after this number of samples
 
     'sampler_seed': 1,                # sets seed of particle sampler. If sampler_seed < 0, seed is set using clocktime
 
-    'test_sampler': 1,                # perform sampler test only (i.e. write sampled pT spectra and vn to file only)
-                                    # set to zero for actual runs
+    'test_sampler': 0,                # perform sampler test only (i.e. write sampled pT spectra and vn to file only)
+                                      # set to zero for actual runs
 
     'pT_min': 0.0,                    # pT min in GeV (for sampler tests)
     'pT_max': 3.0,                    # pT max in GeV
