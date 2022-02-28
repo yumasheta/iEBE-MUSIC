@@ -141,7 +141,7 @@ def run_hydro_event(final_results_folder, event_id):
     hydro_success = False
 
     if path.exists(results_folder):
-        print("{}  Hydrodynaimc results {} exist ... ".format(
+        print("{} Hydrodynaimc results {} exist ... ".format(
             logo, hydro_folder_name),
               flush=True)
         # check hydro finishes properly
@@ -269,28 +269,40 @@ def run_urqmd_shell(n_urqmd, final_results_folder, event_id):
 def run_urqmd_shell_iS3D(n_urqmd, final_results_folder, event_id, is3d_continuous):
     """This function runs urqmd events in parallel"""
     logo = "\U0001F5FF"
-    urqmd_results_name = "particle_list_{}.gz".format(event_id)
     continuous_results_name = "continuous_{}".format(event_id)
-    results_folder = path.join(final_results_folder, urqmd_results_name)
     continuous_results_folder = path.join(final_results_folder, continuous_results_name)
+    urqmd_results_name = "particle_list_{}.gz".format(event_id)
+    results_folder = path.join(final_results_folder, urqmd_results_name)
     urqmd_success = False
 
-    if path.exists(results_folder):
-        print("{} UrQMD results {} exist ... ".format(logo, urqmd_results_name),
-              flush=True)
-        urqmd_success = True
+    if is3d_continuous: # use iS3D to calculate continuous Cooper-Frye
+        if path.exists(continuous_results_folder):
+            print("{} iS3D continuous results {} exist ... ".format(logo, continuous_results_name),
+                  flush=True)
+            urqmd_success = True
 
-    if not urqmd_success:
-        curr_time = time.asctime()
-        print("{}  [{}] Running UrQMD ... ".format(logo, curr_time), flush=True)
-        with Pool(processes=n_urqmd) as pool1:
-            pool1.map(run_urqmd_event, range(n_urqmd))
+        if not urqmd_success:
+            curr_time = time.asctime()
+            print("{}  [{}] Running iS3D continuous ... ".format(logo, curr_time), flush=True)
+            with Pool(processes=n_urqmd) as pool1:
+                pool1.map(run_urqmd_event, range(n_urqmd))
 
-        if is3d_continuous:
             urqmd_success = True
             shutil.move("UrQMDev_0/UrQMD_results/", continuous_results_folder)
-            return (urqmd_success, continuous_results_folder)
-        else:
+        return (urqmd_success, continuous_results_folder)
+
+    else: # use iS3D as sampler
+        if path.exists(results_folder):
+            print("{} UrQMD results {} exist ... ".format(logo, urqmd_results_name),
+                  flush=True)
+            urqmd_success = True
+
+        if not urqmd_success:
+            curr_time = time.asctime()
+            print("{}  [{}] Running UrQMD ... ".format(logo, curr_time), flush=True)
+            with Pool(processes=n_urqmd) as pool1:
+                pool1.map(run_urqmd_event, range(n_urqmd))
+            
             for iev in range(1, n_urqmd):
                 call("./hadronic_afterburner_toolkit/concatenate_binary_files.e "
                      + "UrQMDev_0/UrQMD_results/particle_list.gz "
@@ -299,7 +311,7 @@ def run_urqmd_shell_iS3D(n_urqmd, final_results_folder, event_id, is3d_continuou
             urqmd_success = True
             shutil.move("UrQMDev_0/UrQMD_results/particle_list.gz", results_folder)
 
-            return (urqmd_success, results_folder)
+        return (urqmd_success, results_folder)
 
 
 def run_spvn_analysis(urqmd_file_path, n_threads, final_results_folder,
@@ -685,7 +697,6 @@ def main(para_dict_):
                       flush=True)
 
             if not is3d_continuous:
-                print("\U0001F3CE Run spve analysis...",flush=True)
 
                 # finally collect results
                 run_spvn_analysis(urqmd_file_path, num_threads, final_results_folder,

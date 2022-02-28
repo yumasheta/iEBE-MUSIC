@@ -979,10 +979,14 @@ def main():
 
         GMC_flag = parameter_dict.iss_dict['global_momentum_conservation']
         NO_COLL_flag = parameter_dict.urqmd_dict['run_collisionless']
+        
         IS3D_flag = parameter_dict.control_dict['use_iS3D']
         IS3D_continuous_flag = False
         if (parameter_dict.is3d_dict['operation'] != 2):
             IS3D_continuous_flag = True
+        if (IS3D_continuous_flag): # for continuous case, only one sampler event is needed
+            n_urqmd_per_hydro = 1
+
         ipglasma_flag = False
         if (initial_condition_type in ("IPGlasma", "IPGlasma+KoMPoST")
                 and initial_condition_database == "self"):
