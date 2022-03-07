@@ -982,10 +982,9 @@ def main():
         
         IS3D_flag = parameter_dict.control_dict['use_iS3D']
         IS3D_continuous_flag = False
-        if (parameter_dict.is3d_dict['operation'] != 2):
+        if (IS3D_flag and parameter_dict.is3d_dict['operation'] != 2):
             IS3D_continuous_flag = True
-        if (IS3D_continuous_flag): # for continuous case, only one sampler event is needed
-            n_urqmd_per_hydro = 1
+            n_urqmd_per_hydro = 1 # for continuous case, only one sampler event is needed
 
         ipglasma_flag = False
         if (initial_condition_type in ("IPGlasma", "IPGlasma+KoMPoST")
