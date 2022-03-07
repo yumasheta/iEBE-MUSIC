@@ -9,7 +9,7 @@
 control_dict = {
     'initial_state_type': "3DMCGlauber_consttau",
     'walltime': "6:00:00",          # walltime to run
-    'use_iS3D': True,               # flag to use iS3D as sampler
+    'use_iS3D': False,               # flag to use iS3D as sampler
     'save_hydro_surfaces': True,    # flag to save hydro surfaces
     'save_UrQMD_files': False,      # flag to save UrQMD files
 }
@@ -17,7 +17,7 @@ control_dict = {
 
 # 3DMCGlauber model
 mcglauber_dict = {
-    'database_name': "3DMCGlauber_database/MCGlbAuAu19.6_2",  # path for initial conditions
+    'database_name': "3DMCGlauber_database/MCGlbAuAu19.6",  # path for initial conditions
 }
 
 
@@ -43,6 +43,8 @@ music_dict = {
     'initial_eta_profile': 1, # Hirano + Gaussian fall-off
     'initialize_with_entropy': 1, # initialize entropy
     's_factor': 7.0,
+    'e_Norm': 1.0,
+    'rhob_Norm': 1.05,
 
     'Initial_time_tau_0': 1.5,      # starting time of the hydrodynamic evolution (fm/c)
                                     # max(tau_overlap, tau_0)
@@ -104,13 +106,13 @@ iss_dict = {
     'number_of_particles_needed': 100000,      # number of hadrons to sample
     'local_charge_conservation': 0,     # flag to impose local charge conservation
     'global_momentum_conservation': 0,  # flag to impose GMC
-    'MC_sampling': 0,
-    'calculate_vn': 1,
+    'MC_sampling': 4,
+    'calculate_vn': 0,
 }
 
 # iS3D
 is3d_dict = {
-    'operation': 2,                   # determines what iS3D calculates
+    'operation': 1,                   # determines what iS3D calculates
                                       #   0 = mean spacetime distribution dN/dX
                                       #   1 = smooth momentum spectra dN/pTdpTdphidy
                                       #   2 = sampled particle list (test_sampler = 0) or discrete spacetime/momentum distrbutions (test_sampler = 1)
@@ -156,10 +158,15 @@ is3d_dict = {
     'oversample': 1,                  # run sampler iteratively until mininum number of hadrons
                                       # or max number of events sampled
 
+    'fast': 0,                        # switch to run sampler in fast mode
+                                      # compute thermal density for (T_avg, muB_avg) rather than (T, muB) for each cell
+                                      # assumes (T,muB) throughout surface are very close to (T_avg, muB_avg)
+                                      # turn off if you have corona cells
+
     'min_num_hadrons': 1.0e+7,        # across all samples >= min_num_hadrons
     'max_num_samples': 1.0e+3,        # oversampling will finish after this number of samples
 
-    'sampler_seed': 1,                # sets seed of particle sampler. If sampler_seed < 0, seed is set using clocktime
+    'sampler_seed': -1,                # sets seed of particle sampler. If sampler_seed < 0, seed is set using clocktime
 
     'test_sampler': 0,                # perform sampler test only (i.e. write sampled pT spectra and vn to file only)
                                       # set to zero for actual runs
