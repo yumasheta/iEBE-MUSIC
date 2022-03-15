@@ -450,6 +450,7 @@ hadronic_afterburner_toolkit_dict = {
     'rapidity_dis_max': 7.0,      # maximum value of particle rapidity distribution
     'vn_rapidity_dis_pT_min': 0.20,  # the minimum value of pT for vn rap. distr.
     'vn_rapidity_dis_pT_max': 3.0,   # the maximum value of pT for vn rap. distr.
+    'upper_cut_pT': 1,               # 1: use upper bound for pT, 0: upper bound for p
 
     'check_spatial_dis': 0,         # flag to check dN/dtau distribution
     'intrinsic_detas': 0.1,         # deta_s in the output samples
@@ -489,6 +490,8 @@ hadronic_afterburner_toolkit_dict = {
     'Brap_max': 2.0,    # the maximum \Delta y rapidity for balance function
     'BpT_min': 0.2,     # the minimum pT cut for particles used in balance function
     'BpT_max': 3.0,     # the maximum pT cut for particles used in balance function
+
+    'rapidity_shift': 0.,
 }
 
 

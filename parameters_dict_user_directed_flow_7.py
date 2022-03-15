@@ -8,7 +8,7 @@
 # control parameters
 control_dict = {
     'initial_state_type': "3DMCGlauber_consttau",
-    'walltime': "6:00:00",         # walltime to run
+    'walltime': "5:00:00",         # walltime to run
     'save_hydro_surfaces': True,    # flag to save hydro surfaces
     'save_UrQMD_files': False,       # flag to save UrQMD files
 }
@@ -16,7 +16,7 @@ control_dict = {
 
 # 3DMCGlauber model
 mcglauber_dict = {
-    'database_name': "3DMCGlauber_database/MCGlbAuAu19.6",  # path for initial conditions
+    'database_name': "3DMCGlauber_database/MCGlbAuAu7.7",  # path for initial conditions
 }
 
 
@@ -31,27 +31,28 @@ music_dict = {
     'Initial_rhob_TB_Distribution_Filename': 'initial/initial_TA.dat',
 
     # parameters for the eta profiles in entropy density and net baryon density
-    'ecm': 19.6,                     # collision energy
-    'Eta_plateau_size': 3.0,         # [-Eta_plateau_size/2, Eta_plateau_size/2] for entropy density
-    'Eta_fall_off': 0.22,            # Gaussian width fall off for entropy density
-    'eta_rhob_0': 1.45,               # peak position of the net baryon density
+    'ecm': 7.7,                     # collision energy
+    'Eta_plateau_size': 1.5,         # [-Eta_plateau_size/2, Eta_plateau_size/2] for entropy density
+    'Eta_fall_off': 0.18,            # Gaussian width fall off for entropy density
+
+    'eta_rhob_0': 1.25,               # peak position of the net baryon density
     'eta_rhob_width_1': 0.06,        # Gaussian width for |eta| > |eta_0|
-    'eta_rhob_width_2': 0.40,        # Gaussian width for |eta| < |eta_0|
-    'eta_rhob_plateau_size': 0.5,
-    'eta_rhob_fall_off': 0.1,
+    'eta_rhob_width_2': 0.5,        # Gaussian width for |eta| < |eta_0|
+    'eta_rhob_plateau_size': 0.25,
+    'eta_rhob_fall_off': 0.05,
     
-    'Initial_baryon_profile': 2,
-    'central_baryon_frac': 0.15,
-    'initial_rhob_shift': 1,
-    'initial_energy_shift': 1,
+    'Initial_baryon_profile': 3,
+    'central_baryon_frac': 0.2,
+    'initial_rhob_shift': 0,
     'symmetrize_rhob_profile': 0,
+
     'yL_frac': 0.5,
     'e_factor': 0.0,		         # 4.76 for mN/hbarc
     'e_Norm': 1.15,
-    's_factor': 6.0,
-    'rhob_Norm': 0.9,
+    'rhob_Norm': 1.3,
+    's_factor': 2.45,
 
-    'Initial_time_tau_0': 1.8,      # starting time of the hydrodynamic evolution (fm/c)
+    'Initial_time_tau_0': 3.6,      # starting time of the hydrodynamic evolution (fm/c)
                                     # max(tau_overlap, tau_0)
     'Delta_Tau': 0.010,             # time step to use in the evolution [fm/c]
     'boost_invariant':  0,          # whether the simulation is boost-invariant
@@ -77,7 +78,7 @@ music_dict = {
     'Include_vorticity_terms': 1,          # include vorticity coupling terms
     'Include_Rhob_Yes_1_No_0': 1,
     'turn_on_baryon_diffusion': 1,
-    'kappa_coefficient': 0.55,
+    'kappa_coefficient': 0.3,
 
     # parameters for freeze out and Cooper-Frye
     'N_freeze_out': 1,
@@ -104,7 +105,7 @@ iss_dict = {
                                     # 2: read in 3D hydro surface
     'include_deltaf_shear': 1,      # include delta f contribution from shear
     'include_deltaf_bulk': 0,       # include delta f contribution from bulk
-    'include_deltaf_diffusion': 0,  # include delta f contribution from diffusion
+    'include_deltaf_diffusion': 1,  # include delta f contribution from diffusion
     'sample_upto_desired_particle_number': 1,  # 1: flag to run sampling until desired
                                                # particle numbers is reached
     'number_of_particles_needed': 100000,      # number of hadrons to sample
@@ -126,6 +127,6 @@ hadronic_afterburner_toolkit_dict = {
     'single_rapidity_bin_distribution': 1,  # output pT-differential and pT-integrated distributions
                                             # in a specific rapidity bin
     'compute_corr_rap_dep': 0,      # flag to compute the rapidity dependent multi-particle correlation
-    'resonance_weak_feed_down_flag': 0,     # include weak feed down contribution
+    'resonance_weak_feed_down_flag': 1,     # include weak feed down contribution
 
 }
