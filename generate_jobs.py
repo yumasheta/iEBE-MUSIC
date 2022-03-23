@@ -898,10 +898,10 @@ def main():
             path.join(code_package_path,
                       'Cluster_supports/WSUgrid/submit_all_jobs.sh'), pwd)
         
-    if cluster_name == "OSC":
-        shutil.copy(
-            path.join(code_package_path,
-                      'Cluster_supports/OSC/submit_all_jobs_OSC.sh'), pwd)
+    # if cluster_name == "OSC":
+    #     shutil.copy(
+    #         path.join(code_package_path,
+    #                   'Cluster_supports/OSC/submit_all_jobs_OSC.sh'), pwd)
 
 
 if __name__ == "__main__":

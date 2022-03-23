@@ -9,14 +9,14 @@
 control_dict = {
     'initial_state_type': "3DMCGlauber_consttau",
     'walltime': "6:00:00",         # walltime to run
-    'save_hydro_surfaces': True,    # flag to save hydro surfaces
+    'save_hydro_surfaces': False,    # flag to save hydro surfaces
     'save_UrQMD_files': False,       # flag to save UrQMD files
 }
 
 
 # 3DMCGlauber model
 mcglauber_dict = {
-    'database_name': "3DMCGlauber_database/MCGlbAuAu62.4_2",  # path for initial conditions
+    'database_name': "3DMCGlauber_database/MCGlbAuAu62.4_3",  # path for initial conditions
 }
 
 
@@ -32,26 +32,29 @@ music_dict = {
 
     # parameters for the eta profiles in entropy density and net baryon density
     'ecm': 62.4,                     # collision energy
-    'Eta_plateau_size': 4.6,         # [-Eta_plateau_size/2, Eta_plateau_size/2] for entropy density
-    'Eta_fall_off': 0.2,            # Gaussian width fall off for entropy density
 
-    'eta_rhob_0': 2.5,               # peak position of the net baryon density
-    'eta_rhob_width_1': 0.1,        # Gaussian width for |eta| > |eta_0|
-    'eta_rhob_width_2': 0.2,        # Gaussian width for |eta| < |eta_0|
-    'eta_rhob_plateau_size': 2.0,
-    'eta_rhob_fall_off': 0.2,
-    
-    'Initial_baryon_profile': 3,
-    'central_baryon_frac': 0.25,
-    'initial_rhob_shift': 0,
-    'symmetrize_rhob_profile': 0,
-    
-    'yL_frac': 0.5,
-    'e_factor': 0.0,		         # 4.76 for mN/hbarc
     'e_Norm': 1.15,
-    'rhob_Norm': 1.2,
-    's_factor': 12.0,
+    's_factor': 12.5,
 
+    'Eta_plateau_size': 4.6,         # [-Eta_plateau_size/2, Eta_plateau_size/2] for entropy density
+    'Eta_fall_off': 0.3,            # Gaussian width fall off for entropy density
+
+    'Initial_baryon_profile': 5,
+    'initial_rhob_shift': 0,
+    'yL_frac': 0.5,
+    'symmetrize_rhob_profile': 0,
+
+    'rhob_Norm': 0.71,
+    'eta_rhob_0': 3.0,               # peak position of the net baryon density
+    'eta_rhob_width_1': 0.2,        # Gaussian width for |eta| > |eta_0|
+    'eta_rhob_width_2': 1.0,        # Gaussian width for |eta| < |eta_0|
+
+    'central_baryon_frac': 0.2,
+    'eta_rhob_plateau_size': 1.2,
+    'eta_rhob_fall_off': 0.22,
+
+    'e_factor': 0.0,                # 4.76 for mN/hbarc
+    
     'Initial_time_tau_0': 1.0,      # starting time of the hydrodynamic evolution (fm/c)
                                     # max(tau_overlap, tau_0)
     'Delta_Tau': 0.010,             # time step to use in the evolution [fm/c]
@@ -78,7 +81,7 @@ music_dict = {
     'Include_vorticity_terms': 1,          # include vorticity coupling terms
     'Include_Rhob_Yes_1_No_0': 1,
     'turn_on_baryon_diffusion': 1,
-    'kappa_coefficient': 0.6,
+    'kappa_coefficient': 0.3,
 
     # parameters for freeze out and Cooper-Frye
     'N_freeze_out': 1,
@@ -86,7 +89,7 @@ music_dict = {
     'eps_freeze_min': 0.26,
 
     # switches to output evolution information
-    'output_hydro_debug_info': 1,   # flag to output debug information
+    'output_hydro_debug_info': 0,   # flag to output debug information
     'output_evolution_data': 2,     # flag to output evolution history to file
     'output_movie_flag': 0,
     'output_evolution_T_cut': 0.145,
@@ -95,7 +98,7 @@ music_dict = {
     'output_evolution_every_N_x': 20,   # output evolution file every Nx steps
     'output_evolution_every_N_y': 20,    # output evolution file every Ny steps
     'output_evolution_every_N_timesteps':50,  # output evolution every Ntime steps
-    'output_initial_density_profiles': 1,
+    'output_initial_density_profiles': 0,
 }
 
 
