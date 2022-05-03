@@ -9,7 +9,7 @@
 control_dict = {
     'initial_state_type': "3DMCGlauber_consttau",
     'walltime': "6:00:00",          # walltime to run
-    'use_iS3D': False,               # flag to use iS3D as sampler
+    'use_iS3D': True,               # flag to use iS3D as sampler
     'save_hydro_surfaces': False,    # flag to save hydro surfaces
     'save_UrQMD_files': False,      # flag to save UrQMD files
 }
@@ -113,7 +113,7 @@ iss_dict = {
 
 # iS3D
 is3d_dict = {
-    'operation': 1,                   # determines what iS3D calculates
+    'operation': 2,                   # determines what iS3D calculates
                                       #   0 = mean spacetime distribution dN/dX
                                       #   1 = smooth momentum spectra dN/pTdpTdphidy
                                       #   2 = sampled particle list (test_sampler = 0) or discrete spacetime/momentum distrbutions (test_sampler = 1)
@@ -153,7 +153,7 @@ is3d_dict = {
 
     'include_baryon': 1,              # switch to include baryon chemical potential
     'include_bulk_deltaf': 0,         # switch to include bulk viscous corrections
-    'include_shear_deltaf': 0,        # switch to include shear viscous corrections (or residual shear for vah)
+    'include_shear_deltaf': 1,        # switch to include shear viscous corrections (or residual shear for vah)
     'include_baryondiff_deltaf': 1,   # switch to include baryon diffusion corrections
 
     'oversample': 1,                  # run sampler iteratively until mininum number of hadrons
@@ -169,7 +169,7 @@ is3d_dict = {
 
     'sampler_seed': -1,                # sets seed of particle sampler. If sampler_seed < 0, seed is set using clocktime
 
-    'test_sampler': 0,                # perform sampler test only (i.e. write sampled pT spectra and vn to file only)
+    'test_sampler': 1,                # perform sampler test only (i.e. write sampled pT spectra and vn to file only)
                                       # set to zero for actual runs
 
     'pT_min': 0.0,                    # pT min in GeV (for sampler tests)
