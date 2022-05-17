@@ -10,7 +10,7 @@ control_dict = {
     'initial_state_type': "3DMCGlauber_consttau",
     'walltime': "6:00:00",          # walltime to run
     'use_iS3D': False,               # flag to use iS3D as sampler
-    'save_hydro_surfaces': True,    # flag to save hydro surfaces
+    'save_hydro_surfaces': False,    # flag to save hydro surfaces
     'save_UrQMD_files': False,      # flag to save UrQMD files
 }
 
@@ -34,19 +34,19 @@ music_dict = {
     # parameters for the eta profiles in entropy density and net baryon density
     'ecm': 19.6,                    # collision energy
     'Eta_plateau_size': 3.0,        # [-Eta_plateau_size/2, Eta_plateau_size/2] for entropy density
-    'Eta_fall_off': 0.3,            # Gaussian width fall off for entropy density
-    'eta_rhob_0': 1.4,              # peak position of the net baryon density
-    'eta_rhob_width_1': 0.05,        # Gaussian width for |eta| > |eta_0|
-    'eta_rhob_width_2': 0.75,        # Gaussian width for |eta| < |eta_0|
-    
-    'yL_frac': 0.5,
+    'Eta_fall_off': 0.25,            # Gaussian width fall off for entropy density
+
     'initial_eta_profile': 1, # Hirano + Gaussian fall-off
     'initialize_with_entropy': 1, # initialize entropy
-    's_factor': 7.0,
+    's_factor': 5.85,
     'e_Norm': 1.0,
-    'rhob_Norm': 1.05,
 
-    'Initial_time_tau_0': 1.5,      # starting time of the hydrodynamic evolution (fm/c)
+    'rhob_Norm': 0.9,
+    'eta_rhob_0': 1.65,              # peak position of the net baryon density
+    'eta_rhob_width_1': 0.07,        # Gaussian width for |eta| > |eta_0|
+    'eta_rhob_width_2': 0.85,        # Gaussian width for |eta| < |eta_0|
+    
+    'Initial_time_tau_0': 1.8,      # starting time of the hydrodynamic evolution (fm/c)
                                     # max(tau_overlap, tau_0)
     'Delta_Tau': 0.010,             # time step to use in the evolution [fm/c]
     'boost_invariant':  0,          # whether the simulation is boost-invariant
@@ -59,13 +59,13 @@ music_dict = {
                                     # [-X_grid_size_in_fm/2, X_grid_size_in_fm/2]
     'Grid_size_in_x': 261,          # number of the grid points in x direction
     'Grid_size_in_y': 261,          # number of the grid points in y direction
-    'EOS_to_use': 12,               # type of the equation of state
+    'EOS_to_use': 14,               # type of the equation of state
                                     # 14: neos_BQS lattice EoS at finite mu_B
                                     # 17: BEST lattice EoS at finite mu_B
     # transport coefficients
     'Viscosity_Flag_Yes_1_No_0': 1,        # turn on viscosity in the evolution
     'Include_Shear_Visc_Yes_1_No_0': 1,    # include shear viscous effect
-    'Shear_to_S_ratio': 0.08,              # value of \eta/s
+    'Shear_to_S_ratio': 0.1,              # value of \eta/s
     'T_dependent_Shear_to_S_ratio': 0,     # flag to use temperature dep. \eta/s(T)
     'Include_Bulk_Visc_Yes_1_No_0': 0,     # include bulk viscous effect
     'Include_second_order_terms': 1,       # include second order non-linear coupling terms
@@ -75,13 +75,14 @@ music_dict = {
     'kappa_coefficient': 0.3,
 
     # parameters for freeze out and Cooper-Frye
+    'Do_FreezeOut_lowtemp': 0,              # flag to include cold corona
     'use_eps_for_freeze_out': 1,
     'N_freeze_out': 1,
-    'eps_freeze_max': 0.4,
-    'eps_freeze_min': 0.4,
+    'eps_freeze_max': 0.26,
+    'eps_freeze_min': 0.26,
 
     # switches to output evolution information
-    'output_hydro_debug_info': 1,   # flag to output debug information
+    'output_hydro_debug_info': 0,   # flag to output debug information
     'output_evolution_data': 2,     # flag to output evolution history to file
     'output_movie_flag': 0,
     'output_evolution_T_cut': 0.145,
@@ -90,7 +91,7 @@ music_dict = {
     'output_evolution_every_N_x':  5,   # output evolution file every Nx steps
     'output_evolution_every_N_y': 5,    # output evolution file every Ny steps
     'output_evolution_every_N_timesteps':50,  # output evolution every Ntime steps
-    'output_initial_density_profiles': 1,
+    'output_initial_density_profiles': 0,
 }
 
 
@@ -98,7 +99,7 @@ music_dict = {
 iss_dict = {
     'hydro_mode': 2,                # mode for reading in freeze out information
                                     # 2: read in 3D hydro surface
-    'include_deltaf_shear': 1,      # include delta f contribution from shear
+    'include_deltaf_shear': 0,      # include delta f contribution from shear
     'include_deltaf_bulk': 0,       # include delta f contribution from bulk
     'include_deltaf_diffusion': 1,  # include delta f contribution from diffusion
     'sample_upto_desired_particle_number': 1,  # 1: flag to run sampling until desired
@@ -112,7 +113,7 @@ iss_dict = {
 
 # iS3D
 is3d_dict = {
-    'operation': 1,                   # determines what iS3D calculates
+    'operation': 2,                   # determines what iS3D calculates
                                       #   0 = mean spacetime distribution dN/dX
                                       #   1 = smooth momentum spectra dN/pTdpTdphidy
                                       #   2 = sampled particle list (test_sampler = 0) or discrete spacetime/momentum distrbutions (test_sampler = 1)
@@ -152,7 +153,7 @@ is3d_dict = {
 
     'include_baryon': 1,              # switch to include baryon chemical potential
     'include_bulk_deltaf': 0,         # switch to include bulk viscous corrections
-    'include_shear_deltaf': 0,        # switch to include shear viscous corrections (or residual shear for vah)
+    'include_shear_deltaf': 1,        # switch to include shear viscous corrections (or residual shear for vah)
     'include_baryondiff_deltaf': 1,   # switch to include baryon diffusion corrections
 
     'oversample': 1,                  # run sampler iteratively until mininum number of hadrons
@@ -168,7 +169,7 @@ is3d_dict = {
 
     'sampler_seed': -1,                # sets seed of particle sampler. If sampler_seed < 0, seed is set using clocktime
 
-    'test_sampler': 0,                # perform sampler test only (i.e. write sampled pT spectra and vn to file only)
+    'test_sampler': 1,                # perform sampler test only (i.e. write sampled pT spectra and vn to file only)
                                       # set to zero for actual runs
 
     'pT_min': 0.0,                    # pT min in GeV (for sampler tests)
@@ -196,5 +197,5 @@ hadronic_afterburner_toolkit_dict = {
     'compute_correlation': 0,           # flag to compute correlation function
     'flag_charge_dependence': 0,        # flag to compute charge dependence correlation
     'compute_corr_rap_dep': 0,      # flag to compute the rapidity dependent multi-particle correlation
-    'resonance_weak_feed_down_flag': 0,     # include weak feed down contribution
+    'resonance_weak_feed_down_flag': 1,     # include weak feed down contribution
 }

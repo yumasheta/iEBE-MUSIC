@@ -174,12 +174,12 @@ is3d_dict = {
 
     'pT_min': 0.0,                    # pT min in GeV (for sampler tests)
     'pT_max': 3.0,                    # pT max in GeV
-    'pT_bins': 50,                   # number of pT bins
+    'pT_bins': 100,                   # number of pT bins
 
-    'y_bins': 20,                    # number of rapidity bins
+    'y_bins': 100,                    # number of rapidity bins
 
-    'eta_cut': 4.5,                   # spacetime rapidity cut: |eta| <= eta_cut (should be 2 units > y_cut)
-    'eta_bins': 20,                  # number of eta bins
+    'eta_cut': 7.0,                   # spacetime rapidity cut: |eta| <= eta_cut (should be 2 units > y_cut)
+    'eta_bins': 140,                  # number of eta bins
 
     'do_resonance_decays': 0,         # switch for resonance decays after thermal spectra calculation (not finished)
     'lightest_particle': 111,         # PDG MC ID of lightest particle for resonance decay feed-down

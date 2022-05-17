@@ -153,7 +153,7 @@ is3d_dict = {
 
     'include_baryon': 1,              # switch to include baryon chemical potential
     'include_bulk_deltaf': 0,         # switch to include bulk viscous corrections
-    'include_shear_deltaf': 1,        # switch to include shear viscous corrections (or residual shear for vah)
+    'include_shear_deltaf': 0,        # switch to include shear viscous corrections (or residual shear for vah)
     'include_baryondiff_deltaf': 1,   # switch to include baryon diffusion corrections
 
     'oversample': 1,                  # run sampler iteratively until mininum number of hadrons
