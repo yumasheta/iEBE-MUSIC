@@ -16,7 +16,7 @@ control_dict = {
 
 # 3DMCGlauber model
 mcglauber_dict = {
-    'database_name': "3DMCGlauber_database/MCGlbAuAu19.6_2",  # path for initial conditions
+    'database_name': "3DMCGlauber_database/MCGlbAuAu19.6",  # path for initial conditions
 }
 
 
@@ -33,27 +33,32 @@ music_dict = {
     # parameters for the eta profiles in entropy density and net baryon density
     'ecm': 19.6,                     # collision energy
 
+    'yL_frac': 0.30,                 # rapidity shift in entropy
+    'yLb_frac': 0.10,                # rapidity shift in baryon
+
     'e_Norm': 1.15,
     's_factor': 5.85,
 
+    'initialize_with_entropy': 1,    # initialize entropy
     'Eta_plateau_size': 3.0,         # [-Eta_plateau_size/2, Eta_plateau_size/2] for entropy density
+    'yb_frac': 0.8,                  # fraction of beam rapidity to change the triangle shape, eta_max = yb_frac*y_beam
     'Eta_fall_off': 0.25,            # Gaussian width fall off for entropy density
+    'initial_energy_shift': 1,       # 0, no shift; 1, tail shifted
 
     'Initial_baryon_profile': 5,
-    'initial_rhob_shift': 4,
-    'yL_frac': 0.38,
+    'initial_rhob_shift': 1,         # 0, no shift; 1, tail shifted; 2, plateau shifted; 3, both shifted
     'symmetrize_rhob_profile': 0,
 
-    'rhob_Norm': 0.72,
+    'rhob_Norm': 0.52,
     'eta_rhob_0': 1.4,               # peak position of the net baryon density
-    'eta_rhob_width_1': 0.07,        # Gaussian width for |eta| > |eta_0|
+    'eta_rhob_width_1': 0.12,        # Gaussian width for |eta| > |eta_0|
     'eta_rhob_width_2': 0.18,        # Gaussian width for |eta| < |eta_0|
 
-    'central_baryon_frac': 0.4,
-    'eta_rhob_plateau_size': 1.1,
-    'eta_rhob_fall_off': 0.2,
+    'central_baryon_frac': 0.85,
+    'eta_rhob_plateau_size': 2.8,    # for wide plateau, 2*eta_rhob_0
+    'eta_rhob_fall_off': 0.1,
     
-    'e_factor': 0.0,                # 4.76 for mN/hbarc
+    'e_factor': 0.0,                 # 4.76 for mN/hbarc
     
     'Initial_time_tau_0': 1.8,      # starting time of the hydrodynamic evolution (fm/c)
                                     # max(tau_overlap, tau_0)
@@ -81,7 +86,7 @@ music_dict = {
     'Include_vorticity_terms': 1,          # include vorticity coupling terms
     'Include_Rhob_Yes_1_No_0': 1,
     'turn_on_baryon_diffusion': 1,
-    'kappa_coefficient': 0.4,
+    'kappa_coefficient': 0.3,
 
     # parameters for freeze out and Cooper-Frye
     'N_freeze_out': 1,
@@ -98,7 +103,7 @@ music_dict = {
     'output_evolution_every_N_x': 20,   # output evolution file every Nx steps
     'output_evolution_every_N_y': 20,    # output evolution file every Ny steps
     'output_evolution_every_N_timesteps':50,  # output evolution every Ntime steps
-    'output_initial_density_profiles': 0,
+    'output_initial_density_profiles': 1,
 }
 
 

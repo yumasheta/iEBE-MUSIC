@@ -199,7 +199,9 @@ music_dict = {
     'eta_rhob_fall_off': 0.1,
     
     'Initial_baryon_profile': 1,
-    'yL_frac': 0.5,
+    'yL_frac': 0.0,
+    'yLb_frac': 0.0,
+    'yb_frac': 1.0,
     'central_baryon_frac': 0.4,
     'initial_rhob_shift': 0,
     'initial_energy_shift': 0,

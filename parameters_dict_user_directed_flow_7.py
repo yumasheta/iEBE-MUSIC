@@ -16,7 +16,7 @@ control_dict = {
 
 # 3DMCGlauber model
 mcglauber_dict = {
-    'database_name': "3DMCGlauber_database/MCGlbAuAu7.7_2",  # path for initial conditions
+    'database_name': "3DMCGlauber_database/MCGlbAuAu7.7",  # path for initial conditions
 }
 
 
@@ -31,27 +31,32 @@ music_dict = {
     'Initial_rhob_TB_Distribution_Filename': 'initial/initial_TA.dat',
 
     # parameters for the eta profiles in entropy density and net baryon density
-    'ecm': 7.7,                     # collision energy
+    'ecm': 7.7,                      # collision energy
+
+    'yL_frac': 0.1,                  # rapidity shift in entropy
+    'yLb_frac': 0.1,                # rapidity shift in baryon
 
     'e_Norm': 1.15,
     's_factor': 2.45,
 
+    'initialize_with_entropy': 1,    # initialize entropy
     'Eta_plateau_size': 1.5,         # [-Eta_plateau_size/2, Eta_plateau_size/2] for entropy density
+    'yb_frac': 0.8,                  # fraction of beam rapidity to change the triangle shape, eta_max = yb_frac*y_beam
     'Eta_fall_off': 0.18,            # Gaussian width fall off for entropy density
+    'initial_energy_shift': 1,       # 0, no shift; 1, tail shifted
 
     'Initial_baryon_profile': 5,
-    'initial_rhob_shift': 1,
-    'yL_frac': 0.5,
+    'initial_rhob_shift': 1,         # 0, no shift; 1, tail shifted; 2, plateau shifted; 3, both shifted
     'symmetrize_rhob_profile': 0,
 
-    'rhob_Norm': 0.93,
-    'eta_rhob_0': 1.0,               # peak position of the net baryon density
-    'eta_rhob_width_1': 0.07,        # Gaussian width for |eta| > |eta_0|
-    'eta_rhob_width_2': 0.2,        # Gaussian width for |eta| < |eta_0|
+    'rhob_Norm': 0.85,
+    'eta_rhob_0': 1.2,               # peak position of the net baryon density
+    'eta_rhob_width_1': 0.12,        # Gaussian width for |eta| > |eta_0|
+    'eta_rhob_width_2': 0.50,        # Gaussian width for |eta| < |eta_0|
 
-    'central_baryon_frac': 0.285,
-    'eta_rhob_plateau_size': 0.25,
-    'eta_rhob_fall_off': 0.05,
+    'central_baryon_frac': 0.3,
+    'eta_rhob_plateau_size': 1.5,    # for wide plateau, 2*eta_rhob_0
+    'eta_rhob_fall_off': 0.07,
 
     'e_factor': 0.0,                 # 4.76 for mN/hbarc
 

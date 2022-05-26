@@ -31,26 +31,31 @@ music_dict = {
     'Initial_rhob_TB_Distribution_Filename': 'initial/initial_TA.dat',
 
     # parameters for the eta profiles in entropy density and net baryon density
-    'ecm': 200.0,                     # collision energy
+    'ecm': 200.0,                    # collision energy
+
+    'yL_frac': 0.5,                  # rapidity shift
+    'yLb_frac': 0.10,                # rapidity shift in baryon
 
     'e_Norm': 1.15,
-    's_factor': 15.5,
+    's_factor': 16.,
 
-    'Eta_plateau_size': 4.0,         # [-Eta_plateau_size/2, Eta_plateau_size/2] for entropy density
-    'Eta_fall_off': 1.0,            # Gaussian width fall off for entropy density
+    'initialize_with_entropy': 1,    # initialize entropy
+    'Eta_plateau_size': 4.8,         # [-Eta_plateau_size/2, Eta_plateau_size/2] for entropy density
+    'yb_frac': 1.0,                  # fraction of beam rapidity to change the triangle shape
+    'Eta_fall_off': 0.55,            # Gaussian width fall off for entropy density
+    'initial_energy_shift': 0,       # 0, no shift; 1, tail shifted
 
     'Initial_baryon_profile': 5,
-    'initial_rhob_shift': 0,
-    'yL_frac': 0.5,
+    'initial_rhob_shift': 0,         # 0, no shift; 1, tail shifted; 2, plateau shifted; 3, both shifted
     'symmetrize_rhob_profile': 0,
 
-    'rhob_Norm': 0.7,
+    'rhob_Norm': 0.55,
     'eta_rhob_0': 3.5,               # peak position of the net baryon density
-    'eta_rhob_width_1': 0.3,        # Gaussian width for |eta| > |eta_0|
-    'eta_rhob_width_2': 1.1,        # Gaussian width for |eta| < |eta_0|
+    'eta_rhob_width_1': 0.3,         # Gaussian width for |eta| > |eta_0|
+    'eta_rhob_width_2': 1.1,         # Gaussian width for |eta| < |eta_0|
 
-    'central_baryon_frac': 0.12,
-    'eta_rhob_plateau_size': 1.5,
+    'central_baryon_frac': 0.4,
+    'eta_rhob_plateau_size': 6.0,    # for wide plateau, 2*eta_rhob_0
     'eta_rhob_fall_off': 0.25,
     
     'e_factor': 0.0,                # 4.76 for mN/hbarc

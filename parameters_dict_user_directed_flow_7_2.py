@@ -8,7 +8,7 @@
 # control parameters
 control_dict = {
     'initial_state_type': "3DMCGlauber_consttau",
-    'walltime': "6:00:00",         # walltime to run
+    'walltime': "5:00:00",         # walltime to run
     'save_hydro_surfaces': False,    # flag to save hydro surfaces
     'save_UrQMD_files': False,       # flag to save UrQMD files
 }
@@ -16,7 +16,7 @@ control_dict = {
 
 # 3DMCGlauber model
 mcglauber_dict = {
-    'database_name': "3DMCGlauber_database/MCGlbAuAu62.4_2",  # path for initial conditions; 3, 0-10% for 62.4, 2, 10-40%
+    'database_name': "3DMCGlauber_database/MCGlbAuAu7.7_2",  # path for initial conditions
 }
 
 
@@ -31,36 +31,33 @@ music_dict = {
     'Initial_rhob_TB_Distribution_Filename': 'initial/initial_TA.dat',
 
     # parameters for the eta profiles in entropy density and net baryon density
-    'ecm': 62.4,                     # collision energy
+    'ecm': 7.7,                     # collision energy
 
-    'yL_frac': 0.5,                  # rapidity shift
-    'yLb_frac': 0.10,                # rapidity shift in baryon
+    'yL_frac': 0.3,                # rapidity shift
 
     'e_Norm': 1.15,
-    's_factor': 11.0,
+    's_factor': 2.45,
 
-    'initialize_with_entropy': 1,    # initialize entropy
-    'Eta_plateau_size': 4.6,         # [-Eta_plateau_size/2, Eta_plateau_size/2] for entropy density
-    'yb_frac': 1.0,                  # fraction of beam rapidity to change the triangle shape
-    'Eta_fall_off': 0.30,            # Gaussian width fall off for entropy density
+    'Eta_plateau_size': 1.5,         # [-Eta_plateau_size/2, Eta_plateau_size/2] for entropy density
+    'Eta_fall_off': 0.18,            # Gaussian width fall off for entropy density
     'initial_energy_shift': 0,       # 0, no shift; 1, tail shifted
 
     'Initial_baryon_profile': 5,
     'initial_rhob_shift': 1,         # 0, no shift; 1, tail shifted; 2, plateau shifted; 3, both shifted
     'symmetrize_rhob_profile': 0,
 
-    'rhob_Norm': 0.55,
-    'eta_rhob_0': 3.0,               # peak position of the net baryon density
-    'eta_rhob_width_1': 0.2,         # Gaussian width for |eta| > |eta_0|
-    'eta_rhob_width_2': 1.0,         # Gaussian width for |eta| < |eta_0|
+    'rhob_Norm': 1.1,
+    'eta_rhob_0': 1.18,               # peak position of the net baryon density
+    'eta_rhob_width_1': 0.065,        # Gaussian width for |eta| > |eta_0|
+    'eta_rhob_width_2': 0.65,         # Gaussian width for |eta| < |eta_0|
 
-    'central_baryon_frac': 0.6,
-    'eta_rhob_plateau_size': 6.0,    # for wide plateau, 2*eta_rhob_0
-    'eta_rhob_fall_off': 0.22,
+    'central_baryon_frac': 0.0,
+    'eta_rhob_plateau_size': 0.25,
+    'eta_rhob_fall_off': 0.05,
 
-    'e_factor': 0.0,                # 4.76 for mN/hbarc
-    
-    'Initial_time_tau_0': 1.0,      # starting time of the hydrodynamic evolution (fm/c)
+    'e_factor': 0.0,                 # 4.76 for mN/hbarc
+
+    'Initial_time_tau_0': 3.6,      # starting time of the hydrodynamic evolution (fm/c)
                                     # max(tau_overlap, tau_0)
     'Delta_Tau': 0.010,             # time step to use in the evolution [fm/c]
     'boost_invariant':  0,          # whether the simulation is boost-invariant
