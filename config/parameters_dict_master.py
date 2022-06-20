@@ -203,6 +203,7 @@ music_dict = {
     'yLb_frac': 0.0,
     'yb_frac': 1.0,
     'central_baryon_frac': 0.4,
+    'include_symmetry_frac': 1,
     'initial_rhob_shift': 0,
     'initial_energy_shift': 0,
     'symmetrize_rhob_profile': 0,

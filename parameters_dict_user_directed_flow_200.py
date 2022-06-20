@@ -33,20 +33,19 @@ music_dict = {
     # parameters for the eta profiles in entropy density and net baryon density
     'ecm': 200.0,                    # collision energy
 
-    'yL_frac': 0.5,                  # rapidity shift
-    'yLb_frac': 0.10,                # rapidity shift in baryon
-
     'e_Norm': 1.15,
     's_factor': 16.,
 
     'initialize_with_entropy': 1,    # initialize entropy
-    'Eta_plateau_size': 4.8,         # [-Eta_plateau_size/2, Eta_plateau_size/2] for entropy density
-    'yb_frac': 1.0,                  # fraction of beam rapidity to change the triangle shape
-    'Eta_fall_off': 0.55,            # Gaussian width fall off for entropy density
+    'Eta_plateau_size': 5.0,         # [-Eta_plateau_size/2, Eta_plateau_size/2] for entropy density
+    'yb_frac': 1.0,                  # fraction of beam rapidity to change the triangle shape, eta_max = yb_frac*y_beam
+    'Eta_fall_off': 0.58,            # Gaussian width fall off for entropy density
     'initial_energy_shift': 0,       # 0, no shift; 1, tail shifted
+    'yL_frac': 0.5,                  # rapidity shift
 
     'Initial_baryon_profile': 5,
     'initial_rhob_shift': 0,         # 0, no shift; 1, tail shifted; 2, plateau shifted; 3, both shifted
+    'yLb_frac': 0.10,                # rapidity shift in baryon
     'symmetrize_rhob_profile': 0,
 
     'rhob_Norm': 0.55,
@@ -55,7 +54,7 @@ music_dict = {
     'eta_rhob_width_2': 1.1,         # Gaussian width for |eta| < |eta_0|
 
     'central_baryon_frac': 0.4,
-    'eta_rhob_plateau_size': 6.0,    # for wide plateau, 2*eta_rhob_0
+    'eta_rhob_plateau_size': 7.0,    # for wide plateau, 2*eta_rhob_0
     'eta_rhob_fall_off': 0.25,
     
     'e_factor': 0.0,                # 4.76 for mN/hbarc

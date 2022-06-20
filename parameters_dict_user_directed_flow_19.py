@@ -8,7 +8,7 @@
 # control parameters
 control_dict = {
     'initial_state_type': "3DMCGlauber_consttau",
-    'walltime': "6:00:00",         # walltime to run
+    'walltime': "4:00:00",         # walltime to run
     'save_hydro_surfaces': False,    # flag to save hydro surfaces
     'save_UrQMD_files': False,       # flag to save UrQMD files
 }
@@ -33,29 +33,29 @@ music_dict = {
     # parameters for the eta profiles in entropy density and net baryon density
     'ecm': 19.6,                     # collision energy
 
-    'yL_frac': 0.30,                 # rapidity shift in entropy
-    'yLb_frac': 0.10,                # rapidity shift in baryon
-
     'e_Norm': 1.15,
     's_factor': 5.85,
 
     'initialize_with_entropy': 1,    # initialize entropy
     'Eta_plateau_size': 3.0,         # [-Eta_plateau_size/2, Eta_plateau_size/2] for entropy density
-    'yb_frac': 0.8,                  # fraction of beam rapidity to change the triangle shape, eta_max = yb_frac*y_beam
+    'yb_frac': 1.0,                  # fraction of beam rapidity to change the triangle shape, eta_max = yb_frac*y_beam
     'Eta_fall_off': 0.25,            # Gaussian width fall off for entropy density
-    'initial_energy_shift': 1,       # 0, no shift; 1, tail shifted
+    'initial_energy_shift': 0,       # 0, no shift; 1, tail shifted
+    'yL_frac': 0.10,                 # rapidity shift in entropy
 
     'Initial_baryon_profile': 5,
     'initial_rhob_shift': 1,         # 0, no shift; 1, tail shifted; 2, plateau shifted; 3, both shifted
+    'yLb_frac': 0.25,                # rapidity shift in baryon
     'symmetrize_rhob_profile': 0,
 
-    'rhob_Norm': 0.52,
-    'eta_rhob_0': 1.4,               # peak position of the net baryon density
-    'eta_rhob_width_1': 0.12,        # Gaussian width for |eta| > |eta_0|
-    'eta_rhob_width_2': 0.18,        # Gaussian width for |eta| < |eta_0|
+    'rhob_Norm': 0.6,
+    'eta_rhob_0': 1.6,               # peak position of the net baryon density
+    'eta_rhob_width_1': 0.15,        # Gaussian width for |eta| > |eta_0|
+    'eta_rhob_width_2': 0.6,         # Gaussian width for |eta| < |eta_0|
 
-    'central_baryon_frac': 0.85,
-    'eta_rhob_plateau_size': 2.8,    # for wide plateau, 2*eta_rhob_0
+    'include_symmetry_frac': 2,      # sym_frac: #0, 1.0; #1, sechx; #2, (sechx)^2 
+    'central_baryon_frac': 0.65,
+    'eta_rhob_plateau_size': 3.2,    # for wide plateau, 2*eta_rhob_0
     'eta_rhob_fall_off': 0.1,
     
     'e_factor': 0.0,                 # 4.76 for mN/hbarc
@@ -86,7 +86,7 @@ music_dict = {
     'Include_vorticity_terms': 1,          # include vorticity coupling terms
     'Include_Rhob_Yes_1_No_0': 1,
     'turn_on_baryon_diffusion': 1,
-    'kappa_coefficient': 0.3,
+    'kappa_coefficient': 0.1,
 
     # parameters for freeze out and Cooper-Frye
     'N_freeze_out': 1,

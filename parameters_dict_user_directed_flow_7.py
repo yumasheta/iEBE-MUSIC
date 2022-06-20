@@ -8,7 +8,7 @@
 # control parameters
 control_dict = {
     'initial_state_type': "3DMCGlauber_consttau",
-    'walltime': "5:00:00",         # walltime to run
+    'walltime': "3:30:00",         # walltime to run
     'save_hydro_surfaces': False,    # flag to save hydro surfaces
     'save_UrQMD_files': False,       # flag to save UrQMD files
 }
@@ -33,29 +33,29 @@ music_dict = {
     # parameters for the eta profiles in entropy density and net baryon density
     'ecm': 7.7,                      # collision energy
 
-    'yL_frac': 0.1,                  # rapidity shift in entropy
-    'yLb_frac': 0.1,                # rapidity shift in baryon
-
     'e_Norm': 1.15,
     's_factor': 2.45,
 
     'initialize_with_entropy': 1,    # initialize entropy
     'Eta_plateau_size': 1.5,         # [-Eta_plateau_size/2, Eta_plateau_size/2] for entropy density
-    'yb_frac': 0.8,                  # fraction of beam rapidity to change the triangle shape, eta_max = yb_frac*y_beam
+    'yb_frac': 1.0,                  # fraction of beam rapidity to change the triangle shape, eta_max = yb_frac*y_beam
     'Eta_fall_off': 0.18,            # Gaussian width fall off for entropy density
-    'initial_energy_shift': 1,       # 0, no shift; 1, tail shifted
+    'initial_energy_shift': 0,       # 0, no shift; 1, tail shifted
+    'yL_frac': 0.1,                  # rapidity shift in entropy
 
     'Initial_baryon_profile': 5,
     'initial_rhob_shift': 1,         # 0, no shift; 1, tail shifted; 2, plateau shifted; 3, both shifted
+    'yLb_frac': 0.18,                # rapidity shift in baryon
     'symmetrize_rhob_profile': 0,
 
-    'rhob_Norm': 0.85,
+    'rhob_Norm': 0.86,
     'eta_rhob_0': 1.2,               # peak position of the net baryon density
-    'eta_rhob_width_1': 0.12,        # Gaussian width for |eta| > |eta_0|
-    'eta_rhob_width_2': 0.50,        # Gaussian width for |eta| < |eta_0|
+    'eta_rhob_width_1': 0.14,        # Gaussian width for |eta| > |eta_0|
+    'eta_rhob_width_2': 0.61,        # Gaussian width for |eta| < |eta_0|
 
-    'central_baryon_frac': 0.3,
-    'eta_rhob_plateau_size': 1.5,    # for wide plateau, 2*eta_rhob_0
+    'include_symmetry_frac': 2,      # sym_frac: #0, 1.0; #1, sechx; #2, (sechx)^2 
+    'central_baryon_frac': 0.5,
+    'eta_rhob_plateau_size': 2.2,    # for wide plateau, 2*eta_rhob_0
     'eta_rhob_fall_off': 0.07,
 
     'e_factor': 0.0,                 # 4.76 for mN/hbarc
@@ -86,7 +86,7 @@ music_dict = {
     'Include_vorticity_terms': 1,          # include vorticity coupling terms
     'Include_Rhob_Yes_1_No_0': 1,
     'turn_on_baryon_diffusion': 1,
-    'kappa_coefficient': 0.3,
+    'kappa_coefficient': 0.1,
 
     # parameters for freeze out and Cooper-Frye
     'N_freeze_out': 1,
@@ -95,14 +95,14 @@ music_dict = {
 
     # switches to output evolution information
     'output_hydro_debug_info': 0,   # flag to output debug information
-    'output_evolution_data': 2,     # flag to output evolution history to file
+    'output_evolution_data': 1,     # flag to output evolution history to file
     'output_movie_flag': 0,
     'output_evolution_T_cut': 0.145,
     'outputBinaryEvolution': 1,     # output evolution file in binary format
-    'output_evolution_every_N_eta': 10,  # output evolution file every Neta steps
+    'output_evolution_every_N_eta': 4,  # output evolution file every Neta steps
     'output_evolution_every_N_x': 20,   # output evolution file every Nx steps
     'output_evolution_every_N_y': 20,    # output evolution file every Ny steps
-    'output_evolution_every_N_timesteps':50,  # output evolution every Ntime steps
+    'output_evolution_every_N_timesteps':20,  # output evolution every Ntime steps
     'output_initial_density_profiles': 0,
 }
 
