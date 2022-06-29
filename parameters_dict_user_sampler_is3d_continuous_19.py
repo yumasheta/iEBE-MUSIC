@@ -8,7 +8,7 @@
 # control parameters
 control_dict = {
     'initial_state_type': "3DMCGlauber_consttau",
-    'walltime': "12:00:00",          # walltime to run
+    'walltime': "2:00:00",          # walltime to run
     'use_iS3D': True,               # flag to use iS3D as sampler
     'save_hydro_surfaces': False,    # flag to save hydro surfaces
     'save_UrQMD_files': False,      # flag to save UrQMD files
@@ -153,8 +153,8 @@ is3d_dict = {
 
     'include_baryon': 1,              # switch to include baryon chemical potential
     'include_bulk_deltaf': 0,         # switch to include bulk viscous corrections
-    'include_shear_deltaf': 1,        # switch to include shear viscous corrections (or residual shear for vah)
-    'include_baryondiff_deltaf': 1,   # switch to include baryon diffusion corrections
+    'include_shear_deltaf': 0,        # switch to include shear viscous corrections (or residual shear for vah)
+    'include_baryondiff_deltaf': 0,   # switch to include baryon diffusion corrections
 
     'oversample': 1,                  # run sampler iteratively until mininum number of hadrons
                                       # or max number of events sampled

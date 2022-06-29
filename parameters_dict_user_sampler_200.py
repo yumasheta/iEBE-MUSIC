@@ -8,9 +8,9 @@
 # control parameters
 control_dict = {
     'initial_state_type': "3DMCGlauber_consttau",
-    'walltime': "7:00:00",          # walltime to run
+    'walltime': "5:00:00",          # walltime to run
     'use_iS3D': False,               # flag to use iS3D as sampler
-    'save_hydro_surfaces': True,    # flag to save hydro surfaces
+    'save_hydro_surfaces': False,    # flag to save hydro surfaces
     'save_UrQMD_files': False,      # flag to save UrQMD files
 }
 
@@ -33,8 +33,8 @@ music_dict = {
 
     # parameters for the eta profiles in entropy density and net baryon density
     'ecm': 200.,                    # collision energy
-    'Eta_plateau_size': 3.8,        # [-Eta_plateau_size/2, Eta_plateau_size/2] for entropy density
-    'Eta_fall_off': 0.9,            # Gaussian width fall off for entropy density
+    'Eta_plateau_size': 5.0,        # [-Eta_plateau_size/2, Eta_plateau_size/2] for entropy density
+    'Eta_fall_off': 0.6,            # Gaussian width fall off for entropy density
 
     'initial_eta_profile': 1, # Hirano + Gaussian fall-off
     'initialize_with_entropy': 1, # initialize entropy
@@ -43,7 +43,7 @@ music_dict = {
 
     'rhob_Norm': 0.5,
     'eta_rhob_0': 2.9,              # peak position of the net baryon density
-    'eta_rhob_width_1': 0.5,        # Gaussian width for |eta| > |eta_0|
+    'eta_rhob_width_1': 0.3,        # Gaussian width for |eta| > |eta_0|
     'eta_rhob_width_2': 1.5,        # Gaussian width for |eta| < |eta_0|
     
     'Initial_time_tau_0': 1.0,      # starting time of the hydrodynamic evolution (fm/c)
@@ -59,13 +59,13 @@ music_dict = {
                                     # [-X_grid_size_in_fm/2, X_grid_size_in_fm/2]
     'Grid_size_in_x': 261,          # number of the grid points in x direction
     'Grid_size_in_y': 261,          # number of the grid points in y direction
-    'EOS_to_use': 14,               # type of the equation of state
+    'EOS_to_use': 12,               # type of the equation of state
                                     # 14: neos_BQS lattice EoS at finite mu_B
                                     # 17: BEST lattice EoS at finite mu_B
     # transport coefficients
     'Viscosity_Flag_Yes_1_No_0': 1,        # turn on viscosity in the evolution
     'Include_Shear_Visc_Yes_1_No_0': 1,    # include shear viscous effect
-    'Shear_to_S_ratio': 0.1,              # value of \eta/s
+    'Shear_to_S_ratio': 0.1,               # value of \eta/s
     'T_dependent_Shear_to_S_ratio': 0,     # flag to use temperature dep. \eta/s(T)
     'Include_Bulk_Visc_Yes_1_No_0': 0,     # include bulk viscous effect
     'Include_second_order_terms': 1,       # include second order non-linear coupling terms
@@ -75,6 +75,7 @@ music_dict = {
     'kappa_coefficient': 0.3,
 
     # parameters for freeze out and Cooper-Frye
+    'Do_FreezeOut_lowtemp': 1,              # flag to include cold corona
     'use_eps_for_freeze_out': 1,
     'N_freeze_out': 1,
     'eps_freeze_max': 0.26,
@@ -82,14 +83,14 @@ music_dict = {
 
     # switches to output evolution information
     'output_hydro_debug_info': 0,   # flag to output debug information
-    'output_evolution_data': 2,     # flag to output evolution history to file
+    'output_evolution_data': 0,     # flag to output evolution history to file
     'output_movie_flag': 0,
     'output_evolution_T_cut': 0.145,
     'outputBinaryEvolution': 1,     # output evolution file in binary format
-    'output_evolution_every_N_eta': 2,  # output evolution file every Neta steps
-    'output_evolution_every_N_x':  5,   # output evolution file every Nx steps
-    'output_evolution_every_N_y': 5,    # output evolution file every Ny steps
-    'output_evolution_every_N_timesteps':50,  # output evolution every Ntime steps
+    'output_evolution_every_N_eta': 1,  # output evolution file every Neta steps
+    'output_evolution_every_N_x':  2,   # output evolution file every Nx steps
+    'output_evolution_every_N_y': 2,    # output evolution file every Ny steps
+    'output_evolution_every_N_timesteps':1,  # output evolution every Ntime steps
     'output_initial_density_profiles': 0,
 }
 

@@ -8,7 +8,7 @@
 # control parameters
 control_dict = {
     'initial_state_type': "3DMCGlauber_consttau",
-    'walltime': "4:00:00",          # walltime to run
+    'walltime': "4:30:00",          # walltime to run
     'use_iS3D': False,               # flag to use iS3D as sampler
     'save_hydro_surfaces': False,    # flag to save hydro surfaces
     'save_UrQMD_files': False,      # flag to save UrQMD files
@@ -17,7 +17,7 @@ control_dict = {
 
 # 3DMCGlauber model
 mcglauber_dict = {
-    'database_name': "3DMCGlauber_database/MCGlbAuAu19.6",  # path for initial conditions
+    'database_name': "3DMCGlauber_database/MCGlbAuAu62.4",  # path for initial conditions
 }
 
 
@@ -32,21 +32,21 @@ music_dict = {
     'Initial_rhob_TB_Distribution_Filename': 'initial/initial_TB.dat',
 
     # parameters for the eta profiles in entropy density and net baryon density
-    'ecm': 19.6,                    # collision energy
-    'Eta_plateau_size': 3.0,        # [-Eta_plateau_size/2, Eta_plateau_size/2] for entropy density
-    'Eta_fall_off': 0.25,            # Gaussian width fall off for entropy density
+    'ecm': 62.4,                    # collision energy
+    'Eta_plateau_size': 4.6,        # [-Eta_plateau_size/2, Eta_plateau_size/2] for entropy density
+    'Eta_fall_off': 0.3,            # Gaussian width fall off for entropy density
 
     'initial_eta_profile': 1, # Hirano + Gaussian fall-off
     'initialize_with_entropy': 1, # initialize entropy
-    's_factor': 5.85,
+    's_factor': 11.,
     'e_Norm': 1.0,
 
-    'rhob_Norm': 0.97,
-    'eta_rhob_0': 1.70,              # peak position of the net baryon density
-    'eta_rhob_width_1': 0.07,        # Gaussian width for |eta| > |eta_0|
-    'eta_rhob_width_2': 0.93,        # Gaussian width for |eta| < |eta_0|
+    'rhob_Norm': 0.62,
+    'eta_rhob_0': 2.5,              # peak position of the net baryon density
+    'eta_rhob_width_1': 0.2,        # Gaussian width for |eta| > |eta_0|
+    'eta_rhob_width_2': 1.3,        # Gaussian width for |eta| < |eta_0|
     
-    'Initial_time_tau_0': 1.8,      # starting time of the hydrodynamic evolution (fm/c)
+    'Initial_time_tau_0': 1.0,      # starting time of the hydrodynamic evolution (fm/c)
                                     # max(tau_overlap, tau_0)
     'Delta_Tau': 0.010,             # time step to use in the evolution [fm/c]
     'boost_invariant':  0,          # whether the simulation is boost-invariant
@@ -83,14 +83,14 @@ music_dict = {
 
     # switches to output evolution information
     'output_hydro_debug_info': 0,   # flag to output debug information
-    'output_evolution_data': 2,     # flag to output evolution history to file
+    'output_evolution_data': 0,     # flag to output evolution history to file
     'output_movie_flag': 0,
     'output_evolution_T_cut': 0.145,
     'outputBinaryEvolution': 1,     # output evolution file in binary format
-    'output_evolution_every_N_eta': 2,  # output evolution file every Neta steps
-    'output_evolution_every_N_x':  5,   # output evolution file every Nx steps
-    'output_evolution_every_N_y': 5,    # output evolution file every Ny steps
-    'output_evolution_every_N_timesteps':50,  # output evolution every Ntime steps
+    'output_evolution_every_N_eta': 1,  # output evolution file every Neta steps
+    'output_evolution_every_N_x':  2,   # output evolution file every Nx steps
+    'output_evolution_every_N_y': 2,    # output evolution file every Ny steps
+    'output_evolution_every_N_timesteps':1,  # output evolution every Ntime steps
     'output_initial_density_profiles': 0,
 }
 

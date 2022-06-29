@@ -41,10 +41,10 @@ music_dict = {
     's_factor': 5.85,
     'e_Norm': 1.0,
 
-    'rhob_Norm': 0.9,
+    'rhob_Norm': 0.72,
     'eta_rhob_0': 1.65,              # peak position of the net baryon density
     'eta_rhob_width_1': 0.07,        # Gaussian width for |eta| > |eta_0|
-    'eta_rhob_width_2': 0.85,        # Gaussian width for |eta| < |eta_0|
+    'eta_rhob_width_2': 0.90,        # Gaussian width for |eta| < |eta_0|
     
     'Initial_time_tau_0': 1.8,      # starting time of the hydrodynamic evolution (fm/c)
                                     # max(tau_overlap, tau_0)
@@ -59,7 +59,7 @@ music_dict = {
                                     # [-X_grid_size_in_fm/2, X_grid_size_in_fm/2]
     'Grid_size_in_x': 261,          # number of the grid points in x direction
     'Grid_size_in_y': 261,          # number of the grid points in y direction
-    'EOS_to_use': 14,               # type of the equation of state
+    'EOS_to_use': 12,               # type of the equation of state
                                     # 14: neos_BQS lattice EoS at finite mu_B
                                     # 17: BEST lattice EoS at finite mu_B
     # transport coefficients
@@ -75,7 +75,7 @@ music_dict = {
     'kappa_coefficient': 0.3,
 
     # parameters for freeze out and Cooper-Frye
-    'Do_FreezeOut_lowtemp': 0,              # flag to include cold corona
+    'Do_FreezeOut_lowtemp': 1,              # flag to include cold corona
     'use_eps_for_freeze_out': 1,
     'N_freeze_out': 1,
     'eps_freeze_max': 0.26,
@@ -154,7 +154,7 @@ is3d_dict = {
     'include_baryon': 1,              # switch to include baryon chemical potential
     'include_bulk_deltaf': 0,         # switch to include bulk viscous corrections
     'include_shear_deltaf': 0,        # switch to include shear viscous corrections (or residual shear for vah)
-    'include_baryondiff_deltaf': 1,   # switch to include baryon diffusion corrections
+    'include_baryondiff_deltaf': 0,   # switch to include baryon diffusion corrections
 
     'oversample': 1,                  # run sampler iteratively until mininum number of hadrons
                                       # or max number of events sampled

@@ -8,7 +8,7 @@
 # control parameters
 control_dict = {
     'initial_state_type': "3DMCGlauber_consttau",
-    'walltime': "5:00:00",          # walltime to run
+    'walltime': "3:30:00",          # walltime to run
     'use_iS3D': False,               # flag to use iS3D as sampler
     'save_hydro_surfaces': False,    # flag to save hydro surfaces
     'save_UrQMD_files': False,      # flag to save UrQMD files
@@ -44,7 +44,7 @@ music_dict = {
     'rhob_Norm': 1.1,
     'eta_rhob_0': 1.18,              # peak position of the net baryon density
     'eta_rhob_width_1': 0.065,        # Gaussian width for |eta| > |eta_0|
-    'eta_rhob_width_2': 0.65,        # Gaussian width for |eta| < |eta_0|
+    'eta_rhob_width_2': 0.70,        # Gaussian width for |eta| < |eta_0|
     
     'Initial_time_tau_0': 3.6,      # starting time of the hydrodynamic evolution (fm/c)
                                     # max(tau_overlap, tau_0)
@@ -65,7 +65,7 @@ music_dict = {
     # transport coefficients
     'Viscosity_Flag_Yes_1_No_0': 1,        # turn on viscosity in the evolution
     'Include_Shear_Visc_Yes_1_No_0': 1,    # include shear viscous effect
-    'Shear_to_S_ratio': 0.1,              # value of \eta/s
+    'Shear_to_S_ratio': 0.1,               # value of \eta/s
     'T_dependent_Shear_to_S_ratio': 0,     # flag to use temperature dep. \eta/s(T)
     'Include_Bulk_Visc_Yes_1_No_0': 0,     # include bulk viscous effect
     'Include_second_order_terms': 1,       # include second order non-linear coupling terms
@@ -75,6 +75,7 @@ music_dict = {
     'kappa_coefficient': 0.3,
 
     # parameters for freeze out and Cooper-Frye
+    'Do_FreezeOut_lowtemp': 1,              # flag to include cold corona
     'use_eps_for_freeze_out': 1,
     'N_freeze_out': 1,
     'eps_freeze_max': 0.26,

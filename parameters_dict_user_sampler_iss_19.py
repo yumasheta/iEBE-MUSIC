@@ -41,10 +41,10 @@ music_dict = {
     's_factor': 5.85,
     'e_Norm': 1.0,
 
-    'rhob_Norm': 0.9,
+    'rhob_Norm': 0.72,
     'eta_rhob_0': 1.65,              # peak position of the net baryon density
     'eta_rhob_width_1': 0.07,        # Gaussian width for |eta| > |eta_0|
-    'eta_rhob_width_2': 0.85,        # Gaussian width for |eta| < |eta_0|
+    'eta_rhob_width_2': 0.90,        # Gaussian width for |eta| < |eta_0|
     
     'Initial_time_tau_0': 1.8,      # starting time of the hydrodynamic evolution (fm/c)
                                     # max(tau_overlap, tau_0)
@@ -59,7 +59,7 @@ music_dict = {
                                     # [-X_grid_size_in_fm/2, X_grid_size_in_fm/2]
     'Grid_size_in_x': 261,          # number of the grid points in x direction
     'Grid_size_in_y': 261,          # number of the grid points in y direction
-    'EOS_to_use': 14,               # type of the equation of state
+    'EOS_to_use': 12,               # type of the equation of state
                                     # 14: neos_BQS lattice EoS at finite mu_B
                                     # 17: BEST lattice EoS at finite mu_B
     # transport coefficients
@@ -75,7 +75,7 @@ music_dict = {
     'kappa_coefficient': 0.3,
 
     # parameters for freeze out and Cooper-Frye
-    'Do_FreezeOut_lowtemp': 0,              # flag to include cold corona
+    'Do_FreezeOut_lowtemp': 1,              # flag to include cold corona
     'use_eps_for_freeze_out': 1,
     'N_freeze_out': 1,
     'eps_freeze_max': 0.26,
@@ -101,7 +101,7 @@ iss_dict = {
                                     # 2: read in 3D hydro surface
     'include_deltaf_shear': 0,      # include delta f contribution from shear
     'include_deltaf_bulk': 0,       # include delta f contribution from bulk
-    'include_deltaf_diffusion': 1,  # include delta f contribution from diffusion
+    'include_deltaf_diffusion': 0,  # include delta f contribution from diffusion
     'sample_upto_desired_particle_number': 1,  # 1: flag to run sampling until desired
                                                # particle numbers is reached
     'number_of_particles_needed': 100000,      # number of hadrons to sample
