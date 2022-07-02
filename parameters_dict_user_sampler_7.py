@@ -34,16 +34,16 @@ music_dict = {
     # parameters for the eta profiles in entropy density and net baryon density
     'ecm': 7.7,                    # collision energy
     'Eta_plateau_size': 1.5,        # [-Eta_plateau_size/2, Eta_plateau_size/2] for entropy density
-    'Eta_fall_off': 0.18,            # Gaussian width fall off for entropy density
+    'Eta_fall_off': 0.17,            # Gaussian width fall off for entropy density
 
     'initial_eta_profile': 1, # Hirano + Gaussian fall-off
     'initialize_with_entropy': 1, # initialize entropy
     's_factor': 2.45,
     'e_Norm': 1.0,
 
-    'rhob_Norm': 1.1,
-    'eta_rhob_0': 1.18,              # peak position of the net baryon density
-    'eta_rhob_width_1': 0.065,        # Gaussian width for |eta| > |eta_0|
+    'rhob_Norm': 1.16,
+    'eta_rhob_0': 1.22,              # peak position of the net baryon density
+    'eta_rhob_width_1': 0.066,        # Gaussian width for |eta| > |eta_0|
     'eta_rhob_width_2': 0.70,        # Gaussian width for |eta| < |eta_0|
     
     'Initial_time_tau_0': 3.6,      # starting time of the hydrodynamic evolution (fm/c)

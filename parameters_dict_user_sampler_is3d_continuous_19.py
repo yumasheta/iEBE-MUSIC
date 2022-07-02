@@ -8,7 +8,7 @@
 # control parameters
 control_dict = {
     'initial_state_type': "3DMCGlauber_consttau",
-    'walltime': "2:00:00",          # walltime to run
+    'walltime': "1:00:00",          # walltime to run
     'use_iS3D': True,               # flag to use iS3D as sampler
     'save_hydro_surfaces': False,    # flag to save hydro surfaces
     'save_UrQMD_files': False,      # flag to save UrQMD files
@@ -153,8 +153,11 @@ is3d_dict = {
 
     'include_baryon': 1,              # switch to include baryon chemical potential
     'include_bulk_deltaf': 0,         # switch to include bulk viscous corrections
-    'include_shear_deltaf': 0,        # switch to include shear viscous corrections (or residual shear for vah)
-    'include_baryondiff_deltaf': 0,   # switch to include baryon diffusion corrections
+    'include_shear_deltaf': 1,        # switch to include shear viscous corrections (or residual shear for vah)
+    'include_baryondiff_deltaf': 1,   # switch to include baryon diffusion corrections
+
+    'regulate_deltaf': 1,             # switch to regulate |df| < feq for vh (or |df~| < fa for vah)
+    'outflow': 1,                     # switch to include Theta(p.dsigma) in smooth Cooper-Frye formula
 
     'oversample': 1,                  # run sampler iteratively until mininum number of hadrons
                                       # or max number of events sampled
@@ -176,7 +179,8 @@ is3d_dict = {
     'pT_max': 3.0,                    # pT max in GeV
     'pT_bins': 100,                   # number of pT bins
 
-    'y_bins': 100,                    # number of rapidity bins
+    'y_cut': 5.0,                     # rapidity cut: |y| <= y_cut
+    'y_bins': 101,                    # number of rapidity bins
 
     'eta_cut': 7.0,                   # spacetime rapidity cut: |eta| <= eta_cut (should be 2 units > y_cut)
     'eta_bins': 140,                  # number of eta bins

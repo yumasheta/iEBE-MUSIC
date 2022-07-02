@@ -43,7 +43,7 @@ music_dict = {
 
     'rhob_Norm': 0.5,
     'eta_rhob_0': 2.9,              # peak position of the net baryon density
-    'eta_rhob_width_1': 0.3,        # Gaussian width for |eta| > |eta_0|
+    'eta_rhob_width_1': 0.5,        # Gaussian width for |eta| > |eta_0|
     'eta_rhob_width_2': 1.5,        # Gaussian width for |eta| < |eta_0|
     
     'Initial_time_tau_0': 1.0,      # starting time of the hydrodynamic evolution (fm/c)

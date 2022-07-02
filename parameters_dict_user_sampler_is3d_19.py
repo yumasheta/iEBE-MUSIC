@@ -153,8 +153,8 @@ is3d_dict = {
 
     'include_baryon': 1,              # switch to include baryon chemical potential
     'include_bulk_deltaf': 0,         # switch to include bulk viscous corrections
-    'include_shear_deltaf': 0,        # switch to include shear viscous corrections (or residual shear for vah)
-    'include_baryondiff_deltaf': 0,   # switch to include baryon diffusion corrections
+    'include_shear_deltaf': 1,        # switch to include shear viscous corrections (or residual shear for vah)
+    'include_baryondiff_deltaf': 1,   # switch to include baryon diffusion corrections
 
     'oversample': 1,                  # run sampler iteratively until mininum number of hadrons
                                       # or max number of events sampled
@@ -169,7 +169,7 @@ is3d_dict = {
 
     'sampler_seed': -1,                # sets seed of particle sampler. If sampler_seed < 0, seed is set using clocktime
 
-    'test_sampler': 1,                # perform sampler test only (i.e. write sampled pT spectra and vn to file only)
+    'test_sampler': 0,                # perform sampler test only (i.e. write sampled pT spectra and vn to file only)
                                       # set to zero for actual runs
 
     'pT_min': 0.0,                    # pT min in GeV (for sampler tests)
