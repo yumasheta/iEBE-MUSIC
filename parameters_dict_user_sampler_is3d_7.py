@@ -8,16 +8,16 @@
 # control parameters
 control_dict = {
     'initial_state_type': "3DMCGlauber_consttau",
-    'walltime': "5:00:00",          # walltime to run
+    'walltime': "4:30:00",          # walltime to run
     'use_iS3D': True,               # flag to use iS3D as sampler
-    'save_hydro_surfaces': False,    # flag to save hydro surfaces
+    'save_hydro_surfaces': True,    # flag to save hydro surfaces
     'save_UrQMD_files': False,      # flag to save UrQMD files
 }
 
 
 # 3DMCGlauber model
 mcglauber_dict = {
-    'database_name': "3DMCGlauber_database/MCGlbAuAu200",  # path for initial conditions
+    'database_name': "3DMCGlauber_database/MCGlbAuAu7.7",  # path for initial conditions
 }
 
 
@@ -32,21 +32,21 @@ music_dict = {
     'Initial_rhob_TB_Distribution_Filename': 'initial/initial_TB.dat',
 
     # parameters for the eta profiles in entropy density and net baryon density
-    'ecm': 19.6,                    # collision energy
-    'Eta_plateau_size': 3.0,        # [-Eta_plateau_size/2, Eta_plateau_size/2] for entropy density
-    'Eta_fall_off': 0.25,            # Gaussian width fall off for entropy density
+    'ecm': 7.7,                    # collision energy
+    'Eta_plateau_size': 1.5,        # [-Eta_plateau_size/2, Eta_plateau_size/2] for entropy density
+    'Eta_fall_off': 0.17,            # Gaussian width fall off for entropy density
 
     'initial_eta_profile': 1, # Hirano + Gaussian fall-off
     'initialize_with_entropy': 1, # initialize entropy
-    's_factor': 5.85,
+    's_factor': 2.57,
     'e_Norm': 1.0,
 
-    'rhob_Norm': 0.9,
-    'eta_rhob_0': 1.65,              # peak position of the net baryon density
+    'rhob_Norm': 1.22,
+    'eta_rhob_0': 1.28,              # peak position of the net baryon density
     'eta_rhob_width_1': 0.07,        # Gaussian width for |eta| > |eta_0|
-    'eta_rhob_width_2': 0.85,        # Gaussian width for |eta| < |eta_0|
+    'eta_rhob_width_2': 0.75,        # Gaussian width for |eta| < |eta_0|
     
-    'Initial_time_tau_0': 1.8,      # starting time of the hydrodynamic evolution (fm/c)
+    'Initial_time_tau_0': 3.6,      # starting time of the hydrodynamic evolution (fm/c)
                                     # max(tau_overlap, tau_0)
     'Delta_Tau': 0.010,             # time step to use in the evolution [fm/c]
     'boost_invariant':  0,          # whether the simulation is boost-invariant
@@ -59,13 +59,13 @@ music_dict = {
                                     # [-X_grid_size_in_fm/2, X_grid_size_in_fm/2]
     'Grid_size_in_x': 261,          # number of the grid points in x direction
     'Grid_size_in_y': 261,          # number of the grid points in y direction
-    'EOS_to_use': 14,               # type of the equation of state
+    'EOS_to_use': 12,               # type of the equation of state
                                     # 14: neos_BQS lattice EoS at finite mu_B
                                     # 17: BEST lattice EoS at finite mu_B
     # transport coefficients
     'Viscosity_Flag_Yes_1_No_0': 1,        # turn on viscosity in the evolution
     'Include_Shear_Visc_Yes_1_No_0': 1,    # include shear viscous effect
-    'Shear_to_S_ratio': 0.1,              # value of \eta/s
+    'Shear_to_S_ratio': 0.1,               # value of \eta/s
     'T_dependent_Shear_to_S_ratio': 0,     # flag to use temperature dep. \eta/s(T)
     'Include_Bulk_Visc_Yes_1_No_0': 0,     # include bulk viscous effect
     'Include_second_order_terms': 1,       # include second order non-linear coupling terms
@@ -75,7 +75,7 @@ music_dict = {
     'kappa_coefficient': 0.3,
 
     # parameters for freeze out and Cooper-Frye
-    'Do_FreezeOut_lowtemp': 0,              # flag to include cold corona
+    'Do_FreezeOut_lowtemp': 1,              # flag to include cold corona
     'use_eps_for_freeze_out': 1,
     'N_freeze_out': 1,
     'eps_freeze_max': 0.26,
@@ -113,7 +113,7 @@ iss_dict = {
 
 # iS3D
 is3d_dict = {
-    'operation': 1,                   # determines what iS3D calculates
+    'operation': 2,                   # determines what iS3D calculates
                                       #   0 = mean spacetime distribution dN/dX
                                       #   1 = smooth momentum spectra dN/pTdpTdphidy
                                       #   2 = sampled particle list (test_sampler = 0) or discrete spacetime/momentum distrbutions (test_sampler = 1)
@@ -156,9 +156,6 @@ is3d_dict = {
     'include_shear_deltaf': 1,        # switch to include shear viscous corrections (or residual shear for vah)
     'include_baryondiff_deltaf': 1,   # switch to include baryon diffusion corrections
 
-    'regulate_deltaf': 1,             # switch to regulate |df| < feq for vh (or |df~| < fa for vah)
-    'outflow': 1,                     # switch to include Theta(p.dsigma) in smooth Cooper-Frye formula
-
     'oversample': 1,                  # run sampler iteratively until mininum number of hadrons
                                       # or max number of events sampled
 
@@ -172,15 +169,14 @@ is3d_dict = {
 
     'sampler_seed': -1,                # sets seed of particle sampler. If sampler_seed < 0, seed is set using clocktime
 
-    'test_sampler': 1,                # perform sampler test only (i.e. write sampled pT spectra and vn to file only)
+    'test_sampler': 0,                # perform sampler test only (i.e. write sampled pT spectra and vn to file only)
                                       # set to zero for actual runs
 
     'pT_min': 0.0,                    # pT min in GeV (for sampler tests)
     'pT_max': 3.0,                    # pT max in GeV
     'pT_bins': 100,                   # number of pT bins
 
-    'y_cut': 5.0,                     # rapidity cut: |y| <= y_cut
-    'y_bins': 101,                    # number of rapidity bins
+    'y_bins': 100,                    # number of rapidity bins
 
     'eta_cut': 7.0,                   # spacetime rapidity cut: |eta| <= eta_cut (should be 2 units > y_cut)
     'eta_bins': 140,                  # number of eta bins
