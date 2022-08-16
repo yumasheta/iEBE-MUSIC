@@ -68,7 +68,7 @@ do
             if [ "$urqmdstatus" = true ]; then
                 mv ${eventsPath}/${iev}/${UrQMD_file_name}*${event_id}.gz $target_urqmd_folder
             fi
-            mv ${eventsPath}/${iev}/${spvn_folder_name}*${event_id}.h5 $target_spvn_folder
+            cp ${eventsPath}/${iev}/${spvn_folder_name}*${event_id}.h5 $target_spvn_folder
             ((collected_eventNum++))
         fi
         ((total_eventNum++))

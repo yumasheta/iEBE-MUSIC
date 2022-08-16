@@ -260,6 +260,9 @@ def run_urqmd_shell(n_urqmd, final_results_folder, event_id):
                  + "UrQMDev_0/UrQMD_results/particle_list.gz "
                  + "UrQMDev_{}/UrQMD_results/particle_list.gz".format(iev),
                  shell=True)
+            # remove UrQMD zipped results
+            UrQMDev_folder = "UrQMDev_{}/UrQMD_results".format(iev)
+            shutil.rmtree(UrQMDev_folder)
         urqmd_success = True
         shutil.move("UrQMDev_0/UrQMD_results/particle_list.gz", results_folder)
 
