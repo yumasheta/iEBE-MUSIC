@@ -8,7 +8,7 @@
 # control parameters
 control_dict = {
     'initial_state_type': "3DMCGlauber_consttau",
-    'walltime': "4:00:00",         # walltime to run
+    'walltime': "5:00:00",         # walltime to run
     'save_hydro_surfaces': False,    # flag to save hydro surfaces
     'save_UrQMD_files': False,       # flag to save UrQMD files
 }
@@ -16,7 +16,7 @@ control_dict = {
 
 # 3DMCGlauber model
 mcglauber_dict = {
-    'database_name': "3DMCGlauber_database/MCGlbAuAu19.6",  # path for initial conditions
+    'database_name': "3DMCGlauber_database/MCGlbAuAu19.6_both_NEV_10",  # path for initial conditions
 }
 
 
@@ -50,8 +50,8 @@ music_dict = {
 
     'rhob_Norm': 0.6,
     'eta_rhob_0': 1.6,               # peak position of the net baryon density
-    'eta_rhob_width_1': 0.15,        # Gaussian width for |eta| > |eta_0|
-    'eta_rhob_width_2': 0.6,         # Gaussian width for |eta| < |eta_0|
+    'eta_rhob_width_1': 0.19,        # Gaussian width for |eta| > |eta_0|
+    'eta_rhob_width_2': 0.62,         # Gaussian width for |eta| < |eta_0|
 
     'include_symmetry_frac': 2,      # sym_frac: #0, 1.0; #1, sechx; #2, (sechx)^2 
     'central_baryon_frac': 0.65,
@@ -95,7 +95,7 @@ music_dict = {
 
     # switches to output evolution information
     'output_hydro_debug_info': 0,   # flag to output debug information
-    'output_evolution_data': 2,     # flag to output evolution history to file
+    'output_evolution_data': 0,     # flag to output evolution history to file
     'output_movie_flag': 0,
     'output_evolution_T_cut': 0.145,
     'outputBinaryEvolution': 1,     # output evolution file in binary format
@@ -103,7 +103,7 @@ music_dict = {
     'output_evolution_every_N_x': 20,   # output evolution file every Nx steps
     'output_evolution_every_N_y': 20,    # output evolution file every Ny steps
     'output_evolution_every_N_timesteps':50,  # output evolution every Ntime steps
-    'output_initial_density_profiles': 1,
+    'output_initial_density_profiles': 0,
 }
 
 

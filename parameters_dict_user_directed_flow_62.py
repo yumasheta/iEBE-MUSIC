@@ -8,7 +8,7 @@
 # control parameters
 control_dict = {
     'initial_state_type': "3DMCGlauber_consttau",
-    'walltime': "6:00:00",         # walltime to run
+    'walltime': "5:00:00",         # walltime to run
     'save_hydro_surfaces': False,    # flag to save hydro surfaces
     'save_UrQMD_files': False,       # flag to save UrQMD files
 }
@@ -16,7 +16,7 @@ control_dict = {
 
 # 3DMCGlauber model
 mcglauber_dict = {
-    'database_name': "3DMCGlauber_database/MCGlbAuAu62.4_2",  # path for initial conditions; 0, 0-10%; 2, 10-40%
+    'database_name': "3DMCGlauber_database/MCGlbAuAu62.4_both_NEV_10",  # path for initial conditions; 0, 0-10%; 2, 10-40%
 }
 
 
@@ -45,17 +45,17 @@ music_dict = {
 
     'Initial_baryon_profile': 5,
     'initial_rhob_shift': 1,         # 0, no shift; 1, tail shifted; 2, plateau shifted; 3, both shifted
-    'yLb_frac': 0.10,                # rapidity shift in baryon
+    'yLb_frac': 0.15,                # rapidity shift in baryon
     'symmetrize_rhob_profile': 0,
 
-    'rhob_Norm': 0.58,
-    'eta_rhob_0': 3.0,               # peak position of the net baryon density
-    'eta_rhob_width_1': 0.2,         # Gaussian width for |eta| > |eta_0|
-    'eta_rhob_width_2': 1.0,         # Gaussian width for |eta| < |eta_0|
+    'rhob_Norm': 0.65,
+    'eta_rhob_0': 2.7,               # peak position of the net baryon density
+    'eta_rhob_width_1': 0.25,         # Gaussian width for |eta| > |eta_0|
+    'eta_rhob_width_2': 0.95,         # Gaussian width for |eta| < |eta_0|
 
-    'include_symmetry_frac': 1,      # sym_frac: #0, 1.0; #1, sechx; #2, (sechx)^2 
+    'include_symmetry_frac': 2,      # sym_frac: #0, 1.0; #1, sechx; #2, (sechx)^2 
     'central_baryon_frac': 0.51,
-    'eta_rhob_plateau_size': 6.0,    # for wide plateau, 2*eta_rhob_0
+    'eta_rhob_plateau_size': 5.4,    # for wide plateau, 2*eta_rhob_0
     'eta_rhob_fall_off': 0.22,
 
     'e_factor': 0.0,                # 4.76 for mN/hbarc
@@ -86,7 +86,7 @@ music_dict = {
     'Include_vorticity_terms': 1,          # include vorticity coupling terms
     'Include_Rhob_Yes_1_No_0': 1,
     'turn_on_baryon_diffusion': 1,
-    'kappa_coefficient': 0.3,
+    'kappa_coefficient': 0.1,
 
     # parameters for freeze out and Cooper-Frye
     'N_freeze_out': 1,
@@ -95,7 +95,7 @@ music_dict = {
 
     # switches to output evolution information
     'output_hydro_debug_info': 0,   # flag to output debug information
-    'output_evolution_data': 1,     # flag to output evolution history to file
+    'output_evolution_data': 0,     # flag to output evolution history to file
     'output_movie_flag': 0,
     'output_evolution_T_cut': 0.145,
     'outputBinaryEvolution': 1,     # output evolution file in binary format
