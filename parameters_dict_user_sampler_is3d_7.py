@@ -38,7 +38,7 @@ music_dict = {
 
     'initial_eta_profile': 1, # Hirano + Gaussian fall-off
     'initialize_with_entropy': 1, # initialize entropy
-    's_factor': 2.57,
+    's_factor': 2.44,
     'e_Norm': 1.0,
 
     'rhob_Norm': 1.22,
@@ -83,7 +83,7 @@ music_dict = {
 
     # switches to output evolution information
     'output_hydro_debug_info': 0,   # flag to output debug information
-    'output_evolution_data': 2,     # flag to output evolution history to file
+    'output_evolution_data': 0,     # flag to output evolution history to file
     'output_movie_flag': 0,
     'output_evolution_T_cut': 0.145,
     'outputBinaryEvolution': 1,     # output evolution file in binary format

@@ -10,7 +10,7 @@ control_dict = {
     'initial_state_type': "3DMCGlauber_consttau",
     'walltime': "6:00:00",          # walltime to run
     'use_iS3D': True,               # flag to use iS3D as sampler
-    'save_hydro_surfaces': False,    # flag to save hydro surfaces
+    'save_hydro_surfaces': True,    # flag to save hydro surfaces
     'save_UrQMD_files': False,      # flag to save UrQMD files
 }
 
@@ -38,13 +38,13 @@ music_dict = {
 
     'initial_eta_profile': 1, # Hirano + Gaussian fall-off
     'initialize_with_entropy': 1, # initialize entropy
-    's_factor': 5.85,
+    's_factor': 5.56,
     'e_Norm': 1.0,
 
-    'rhob_Norm': 0.72,
-    'eta_rhob_0': 1.65,              # peak position of the net baryon density
+    'rhob_Norm': 0.97,
+    'eta_rhob_0': 1.70,              # peak position of the net baryon density
     'eta_rhob_width_1': 0.07,        # Gaussian width for |eta| > |eta_0|
-    'eta_rhob_width_2': 0.90,        # Gaussian width for |eta| < |eta_0|
+    'eta_rhob_width_2': 0.93,        # Gaussian width for |eta| < |eta_0|
     
     'Initial_time_tau_0': 1.8,      # starting time of the hydrodynamic evolution (fm/c)
                                     # max(tau_overlap, tau_0)
@@ -83,7 +83,7 @@ music_dict = {
 
     # switches to output evolution information
     'output_hydro_debug_info': 0,   # flag to output debug information
-    'output_evolution_data': 2,     # flag to output evolution history to file
+    'output_evolution_data': 0,     # flag to output evolution history to file
     'output_movie_flag': 0,
     'output_evolution_T_cut': 0.145,
     'outputBinaryEvolution': 1,     # output evolution file in binary format
