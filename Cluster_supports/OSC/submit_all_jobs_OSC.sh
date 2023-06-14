@@ -19,7 +19,7 @@ for ijob in `ls --color=none | grep "event"`;
 do
     echo "submit job in " ${workFolder}/${ijob}
     cd ${ijob}
-    sbatch -A PAS0254 --cluster=owens submit_job.pbs > job_id
+    sbatch -A PAS0254 submit_job.pbs > job_id
     cd ..
     ((Numjobs++))
 done

@@ -16,7 +16,7 @@ control_dict = {
 
 # 3DMCGlauber model
 mcglauber_dict = {
-    'database_name': "3DMCGlauber_database/MCGlbAuAu19.6_both_NEV_10",  # path for initial conditions
+    'database_name': "3DMCGlauber_database/MCGlbAuAu19.6_midcent_NEV_10",  # path for initial conditions
 }
 
 
@@ -45,7 +45,7 @@ music_dict = {
 
     'Initial_baryon_profile': 5,
     'initial_rhob_shift': 1,         # 0, no shift; 1, tail shifted; 2, plateau shifted; 3, both shifted
-    'yLb_frac': 0.25,                # rapidity shift in baryon
+    'yLb_frac': 0.30,                # rapidity shift in baryon
     'symmetrize_rhob_profile': 0,
 
     'rhob_Norm': 0.6,

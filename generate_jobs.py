@@ -95,7 +95,7 @@ cd {4:s}
 #SBATCH --mail-type=ALL
 #SBATCH --mail-user=lipei.du@mail.mcgill.ca
 #SBATCH -t {3:s}
-#SBARCH -D {4:s}
+#SBATCH -D {4:s}
 
 module load gcc-compatibility/10.3.0
 

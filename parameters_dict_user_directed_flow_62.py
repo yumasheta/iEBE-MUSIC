@@ -8,7 +8,7 @@
 # control parameters
 control_dict = {
     'initial_state_type': "3DMCGlauber_consttau",
-    'walltime': "5:00:00",         # walltime to run
+    'walltime': "6:30:00",         # walltime to run
     'save_hydro_surfaces': False,    # flag to save hydro surfaces
     'save_UrQMD_files': False,       # flag to save UrQMD files
 }
@@ -16,7 +16,7 @@ control_dict = {
 
 # 3DMCGlauber model
 mcglauber_dict = {
-    'database_name': "3DMCGlauber_database/MCGlbAuAu62.4_both_NEV_10",  # path for initial conditions; 0, 0-10%; 2, 10-40%
+    'database_name': "3DMCGlauber_database/MCGlbAuAu62.4_midcent_NEV_10",  # path for initial conditions; 0, 0-10%; 2, 10-40%
 }
 
 
@@ -45,7 +45,7 @@ music_dict = {
 
     'Initial_baryon_profile': 5,
     'initial_rhob_shift': 1,         # 0, no shift; 1, tail shifted; 2, plateau shifted; 3, both shifted
-    'yLb_frac': 0.15,                # rapidity shift in baryon
+    'yLb_frac': 0.25,                # rapidity shift in baryon
     'symmetrize_rhob_profile': 0,
 
     'rhob_Norm': 0.65,

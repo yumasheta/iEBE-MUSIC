@@ -119,7 +119,6 @@ urqmd
 playground
 
 3DMCGlauber_database/*
-OSC*
 results/
 submit_all_jobs.sh
 submit_all_jobs_OSC.sh
