@@ -62,14 +62,28 @@ def write_script_header(cluster, script, n_threads, event_id, walltime,
 """.format(event_id, n_threads, walltime, working_folder))
     elif cluster == "McGill":
         script.write("""#!/usr/bin/env bash
-#PBS -N {0:s}
-#PBS -l nodes=1:ppn={1:d}:irulan
-#PBS -l walltime={2:s}
-#PBS -S /bin/bash
-#PBS -e test.err
-#PBS -o test.log
-#PBS -d {3:s}
-""".format(event_id, n_threads, walltime, working_folder))
+#SBATCH -J {0:s}
+#SBATCH -N 1
+#SBATCH -n {1:d}
+#SBATCH --mem={2:.0f}G
+#SBATCH -e test.err
+#SBATCH -o test.log
+#SBATCH --account=def-gale
+#SBATCH --mail-type=ALL
+#SBATCH --mail-user=lipei.du@mail.mcgill.ca
+#SBATCH -t {3:s}
+#SBARCH -D {4:s}
+
+module load nixpkgs/16.09  intel/2018.3  impi/2018.3.222
+module load gsl
+module load hdf5-mpi/1.8.18
+module load StdEnv/2020 intel/2020.1.217 hdf5/1.12.1
+module load gcc
+module load python
+module load scipy-stack/2023a
+
+""".format(event_id, n_threads, mem, walltime, working_folder)
+        )
     elif cluster == "wsugrid":
         script.write("""#!/usr/bin/env bash
 #SBATCH --job-name {0:s}

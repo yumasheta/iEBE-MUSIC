@@ -41,8 +41,8 @@ music_dict = {
     's_factor': 11.5,
     'e_Norm': 1.0,
 
-    'rhob_Norm': 0.98,
-    'eta_rhob_0': 2.8,              # peak position of the net baryon density
+    'rhob_Norm': 1.,
+    'eta_rhob_0': 2.5,              # peak position of the net baryon density
     'eta_rhob_width_1': 0.24,        # Gaussian width for |eta| > |eta_0|
     'eta_rhob_width_2': 1.35,        # Gaussian width for |eta| < |eta_0|
     
