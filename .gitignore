@@ -118,7 +118,10 @@ osc2u
 urqmd
 playground
 
-3DMCGlauber_database/*
+#3DMCGlauber_database/*
+3DMCGlauber_database/duplicate*
+3DMCGlauber_database/MCGlbAuAu27*
+3DMCGlauber_database/MCGlbAuAu19.6_*
 results/
 submit_all_jobs.sh
 submit_all_jobs_OSC.sh

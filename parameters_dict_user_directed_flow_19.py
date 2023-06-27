@@ -16,7 +16,7 @@ control_dict = {
 
 # 3DMCGlauber model
 mcglauber_dict = {
-    'database_name': "3DMCGlauber_database/MCGlbAuAu19.6_midcent_NEV_10",  # path for initial conditions
+    'database_name': "3DMCGlauber_database/MCGlbAuAu19.6",  # path for initial conditions
 }
 
 

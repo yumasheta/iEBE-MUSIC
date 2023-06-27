@@ -19,12 +19,12 @@
 
 # download MUSIC
 rm -fr MUSIC_code
-git clone --depth=1 https://github.com/LipeiDu/MUSIC.git -b du_viscous MUSIC_code
+git clone --depth=1 https://github.com/LipeiDu/MUSIC.git -b ldu_dev MUSIC_code
 rm -fr MUSIC_code/.git
 
 # download iSS particle sampler
 rm -fr iSS_code
-git clone --depth=1 https://github.com/chunshen1987/iSS -b momentumSampler iSS_code
+git clone --depth=1 https://github.com/LipeiDu/iSS.git iSS_code
 rm -fr iSS_code/.git
 
 # download UrQMD afterburner
@@ -34,6 +34,6 @@ rm -fr urqmd_code/.git
 
 # download hadronic afterner
 rm -fr hadronic_afterburner_toolkit_code
-git clone --depth=1 https://github.com/chunshen1987/hadronic_afterburner_toolkit hadronic_afterburner_toolkit_code
+git clone --depth=1 https://github.com/LipeiDu/hadronic_afterburner_toolkit -b ldu_dev hadronic_afterburner_toolkit_code
 rm -fr hadronic_afterburner_toolkit_code/.git
 
