@@ -8,7 +8,7 @@
 # control parameters
 control_dict = {
     'initial_state_type': "3DMCGlauber_consttau",
-    'walltime': "8:30:00",          # walltime to run
+    'walltime': "15:30:00",          # walltime to run
     'use_iS3D': True,               # flag to use iS3D as sampler
     'save_hydro_surfaces': True,    # flag to save hydro surfaces
     'save_UrQMD_files': False,      # flag to save UrQMD files
@@ -17,7 +17,7 @@ control_dict = {
 
 # 3DMCGlauber model
 mcglauber_dict = {
-    'database_name': "3DMCGlauber_database/MCGlbAuAu200",  # path for initial conditions
+    'database_name': "3DMCGlauber_database/MCGlbAuAu130_60_70",  # path for initial conditions
 }
 
 
@@ -42,7 +42,7 @@ music_dict = {
     'e_Norm': 1.0,
 
     'rhob_Norm': 1.0,
-    'eta_rhob_0': 3.5,              # peak position of the net baryon density
+    'eta_rhob_0': 3.2,              # peak position of the net baryon density
     'eta_rhob_width_1': 0.6,        # Gaussian width for |eta| > |eta_0|
     'eta_rhob_width_2': 1.5,        # Gaussian width for |eta| < |eta_0|
     
@@ -83,7 +83,7 @@ music_dict = {
 
     # switches to output evolution information
     'output_hydro_debug_info': 0,   # flag to output debug information
-    'output_evolution_data': 0,     # flag to output evolution history to file
+    'output_evolution_data': 2,     # flag to output evolution history to file
     'output_movie_flag': 0,
     'output_evolution_T_cut': 0.145,
     'outputBinaryEvolution': 1,     # output evolution file in binary format
