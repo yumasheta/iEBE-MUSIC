@@ -17,7 +17,7 @@ control_dict = {
 
 # 3DMCGlauber model
 mcglauber_dict = {
-    'database_name': "3DMCGlauber_database/MCGlbAuAu39_0_10",  # path for initial conditions
+    'database_name': "3DMCGlauber_database/MCGlbAuAu39_00_10",  # path for initial conditions
 }
 
 
@@ -38,7 +38,7 @@ music_dict = {
 
     'initial_eta_profile': 1, # Hirano + Gaussian fall-off
     'initialize_with_entropy': 1, # initialize entropy
-    's_factor': 10.8,
+    's_factor': 11.,
     'e_Norm': 1.0,
 
     'rhob_Norm': 1.1,
@@ -78,19 +78,19 @@ music_dict = {
     'Do_FreezeOut_lowtemp': 1,              # flag to include cold corona
     'use_eps_for_freeze_out': 1,
     'N_freeze_out': 1,
-    'eps_freeze_max': 0.26,
-    'eps_freeze_min': 0.26,
+    'eps_freeze_max': 0.35,
+    'eps_freeze_min': 0.35,
 
     # switches to output evolution information
     'output_hydro_debug_info': 0,   # flag to output debug information
-    'output_evolution_data': 2,     # flag to output evolution history to file
+    'output_evolution_data': 0,     # flag to output evolution history to file
     'output_movie_flag': 0,
     'output_evolution_T_cut': 0.145,
     'outputBinaryEvolution': 1,     # output evolution file in binary format
     'output_evolution_every_N_eta': 1,  # output evolution file every Neta steps
-    'output_evolution_every_N_x':  2,   # output evolution file every Nx steps
-    'output_evolution_every_N_y': 2,    # output evolution file every Ny steps
-    'output_evolution_every_N_timesteps':1,  # output evolution every Ntime steps
+    'output_evolution_every_N_x':  4,   # output evolution file every Nx steps
+    'output_evolution_every_N_y': 4,    # output evolution file every Ny steps
+    'output_evolution_every_N_timesteps':5,  # output evolution every Ntime steps
     'output_initial_density_profiles': 0,
 }
 
