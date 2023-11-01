@@ -9,7 +9,7 @@
 control_dict = {
     'initial_state_type': "3DMCGlauber_consttau",
     'walltime': "10:00:00",          # walltime to run
-    'use_iS3D': True,               # flag to use iS3D as sampler
+    'use_iS3D': False,               # flag to use iS3D as sampler
     'save_hydro_surfaces': True,    # flag to save hydro surfaces
     'save_UrQMD_files': False,      # flag to save UrQMD files
 }
@@ -59,7 +59,7 @@ music_dict = {
                                     # [-X_grid_size_in_fm/2, X_grid_size_in_fm/2]
     'Grid_size_in_x': 261,          # number of the grid points in x direction
     'Grid_size_in_y': 261,          # number of the grid points in y direction
-    'EOS_to_use': 12,               # type of the equation of state
+    'EOS_to_use': 14,               # type of the equation of state
                                     # 14: neos_BQS lattice EoS at finite mu_B
                                     # 17: BEST lattice EoS at finite mu_B
     # transport coefficients

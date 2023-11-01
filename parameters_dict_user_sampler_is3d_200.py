@@ -9,7 +9,7 @@
 control_dict = {
     'initial_state_type': "3DMCGlauber_consttau",
     'walltime': "15:30:00",          # walltime to run
-    'use_iS3D': True,               # flag to use iS3D as sampler
+    'use_iS3D': False,               # flag to use iS3D as sampler
     'save_hydro_surfaces': True,    # flag to save hydro surfaces
     'save_UrQMD_files': False,      # flag to save UrQMD files
 }
@@ -17,7 +17,7 @@ control_dict = {
 
 # 3DMCGlauber model
 mcglauber_dict = {
-    'database_name': "3DMCGlauber_database/MCGlbAuAu200_60_70",  # path for initial conditions
+    'database_name': "3DMCGlauber_database/MCGlbAuAu200_00_10",  # path for initial conditions
 }
 
 
@@ -59,7 +59,7 @@ music_dict = {
                                     # [-X_grid_size_in_fm/2, X_grid_size_in_fm/2]
     'Grid_size_in_x': 261,          # number of the grid points in x direction
     'Grid_size_in_y': 261,          # number of the grid points in y direction
-    'EOS_to_use': 12,               # type of the equation of state
+    'EOS_to_use': 14,               # type of the equation of state
                                     # 14: neos_BQS lattice EoS at finite mu_B
                                     # 17: BEST lattice EoS at finite mu_B
     # transport coefficients
@@ -78,19 +78,19 @@ music_dict = {
     'Do_FreezeOut_lowtemp': 1,              # flag to include cold corona
     'use_eps_for_freeze_out': 1,
     'N_freeze_out': 1,
-    'eps_freeze_max': 0.26,
-    'eps_freeze_min': 0.26,
+    'eps_freeze_max': 0.35,
+    'eps_freeze_min': 0.35,
 
     # switches to output evolution information
     'output_hydro_debug_info': 0,   # flag to output debug information
-    'output_evolution_data': 2,     # flag to output evolution history to file
+    'output_evolution_data': 0,     # flag to output evolution history to file
     'output_movie_flag': 0,
     'output_evolution_T_cut': 0.145,
     'outputBinaryEvolution': 1,     # output evolution file in binary format
     'output_evolution_every_N_eta': 1,  # output evolution file every Neta steps
-    'output_evolution_every_N_x':  2,   # output evolution file every Nx steps
-    'output_evolution_every_N_y': 2,    # output evolution file every Ny steps
-    'output_evolution_every_N_timesteps':1,  # output evolution every Ntime steps
+    'output_evolution_every_N_x':  4,   # output evolution file every Nx steps
+    'output_evolution_every_N_y': 4,    # output evolution file every Ny steps
+    'output_evolution_every_N_timesteps':5,  # output evolution every Ntime steps
     'output_initial_density_profiles': 0,
 }
 
