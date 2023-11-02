@@ -30,6 +30,12 @@ def fecth_an_3DMCGlauber_smooth_event(database_path, iev):
     filelist = glob(path.join(database_path, 'nuclear_thickness_TA_*.dat'))
     return (filelist[iev])
 
+def fecth_a_SMASH_initial_event(database_path, iev):
+    """This function returns the filename of an initial condition in the
+       database_path folder
+    """
+    filelist = glob(path.join(database_path, 'SMASH_ini.dat'))
+    return (filelist[iev])
 
 def get_initial_condition(database, initial_type, iev, seed_add,
                           final_results_folder, time_stamp_str="0.4"):
@@ -88,6 +94,9 @@ def get_initial_condition(database, initial_type, iev, seed_add,
             return file_name
     elif initial_type == "3DMCGlauber_consttau":
         file_name = fecth_an_3DMCGlauber_smooth_event(database, iev)
+        return file_name
+    elif initial_type == "SMASH_initial":
+        file_name = fecth_a_SMASH_initial_event(database, iev)
         return file_name
     else:
         print("\U0001F6AB  "
@@ -614,7 +623,12 @@ def main(para_dict_):
                            + ".music_init_flowNonLinear_pimunuTransverse.txt")),
                 hydro_initial_file),
                  shell=True)
-
+        if initial_type == "SMASH_initial":
+            filename = ifile.split("/")[-1]
+            filepath = initial_condition
+            makedirs("MUSIC/initial", exist_ok=True)
+            shutil.copy(path.join(filepath, filename),
+                        "MUSIC/initial/SMASH_ini.dat")
         # first run hydro
         hydro_success, hydro_folder_name = run_hydro_event(
             final_results_folder, event_id)
@@ -707,21 +721,22 @@ if __name__ == "__main__":
         HYDRO_EVENT_ID0 = int(sys.argv[4])
         N_URQMD = int(sys.argv[5])
         N_THREADS = int(sys.argv[6])
-        SAVE_IPGLASMA = (sys.argv[7].lower() == "true")
-        SAVE_KOMPOST = (sys.argv[8].lower() == "true")
-        SAVE_HYDRO = (sys.argv[9].lower() == "true")
-        SAVE_URQMD = (sys.argv[10].lower() == "true")
-        USE_IS3D = (sys.argv[11].lower() == "true")
-        IS3D_CONTINUOUS = (sys.argv[12].lower() == "true")
-        SEED_ADD = int(sys.argv[13])
-        TIME_STAMP = str(sys.argv[14])
+        SAVE_SMASHINI = (sys.argv[7].lower() == "true")
+        SAVE_IPGLASMA = (sys.argv[8].lower() == "true")
+        SAVE_KOMPOST = (sys.argv[9].lower() == "true")
+        SAVE_HYDRO = (sys.argv[10].lower() == "true")
+        SAVE_URQMD = (sys.argv[11].lower() == "true")
+        USE_IS3D = (sys.argv[12].lower() == "true")
+        IS3D_CONTINUOUS = (sys.argv[13].lower() == "true")
+        SEED_ADD = int(sys.argv[14])
+        TIME_STAMP = str(sys.argv[15])
     except IndexError:
         print_usage()
         exit(0)
 
     known_initial_types = [
         "IPGlasma", "IPGlasma+KoMPoST", "3DMCGlauber_dynamical",
-        "3DMCGlauber_consttau"
+        "3DMCGlauber_consttau", "SMASH_initial"
     ]
     if INITIAL_CONDITION_TYPE not in known_initial_types:
         print("\U0001F6AB  "
@@ -737,6 +752,7 @@ if __name__ == "__main__":
         'hydro_id0': HYDRO_EVENT_ID0,
         'n_urqmd': N_URQMD,
         'num_threads': N_THREADS,
+        'save_smashini_results': SAVE_SMASHINI,
         'save_ipglasma': SAVE_IPGLASMA,
         'save_kompost': SAVE_KOMPOST,
         'save_hydro': SAVE_HYDRO,

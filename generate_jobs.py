@@ -18,7 +18,7 @@ centrality_list = [(0.00, 0.15, '0-5', 0.05), (0.15, 0.30, '5-10', 0.05),
 
 known_initial_types = [
     "IPGlasma", "IPGlasma+KoMPoST", "3DMCGlauber_dynamical",
-    "3DMCGlauber_consttau"
+    "3DMCGlauber_consttau", "SMASH_initial"
 ]
 
 support_cluster_list = [
@@ -188,7 +188,7 @@ wait
 
 
 def generate_full_job_script(cluster_name, folder_name, database, initial_type,
-                             n_hydro, ev0_id, n_urqmd, n_threads, walltime, ipglasma_flag,
+                             n_hydro, ev0_id, n_urqmd, n_threads, walltime, smashini_flag, ipglasma_flag,
                              kompost_flag, hydro_flag, urqmd_flag, IS3D_flag, IS3D_continuous_flag, time_stamp):
     """This function generates full job script"""
     working_folder = folder_name
@@ -201,13 +201,13 @@ def generate_full_job_script(cluster_name, folder_name, database, initial_type,
     script.write("\nseed_add=${1:-0}\n")
     if cluster_name != "OSG":
         script.write("""
-python3 hydro_plus_UrQMD_driver.py {0:s} {1:s} {2:d} {3:d} {4:d} {5:d} {6} {7} {8} {9} {10} {11} $seed_add {12:s} > run.log
-""".format(initial_type, database, n_hydro, ev0_id, n_urqmd, n_threads,
+python3 hydro_plus_UrQMD_driver.py {0:s} {1:s} {2:d} {3:d} {4:d} {5:d} {6} {7} {8} {9} {10} {11} {12} $seed_add {13:s} > run.log
+""".format(initial_type, database, n_hydro, ev0_id, n_urqmd, n_threads, smashini_flag,
            ipglasma_flag, kompost_flag, hydro_flag, urqmd_flag, IS3D_flag, IS3D_continuous_flag, time_stamp))
     else:
         script.write("""
-python3 hydro_plus_UrQMD_driver.py {0:s} {1:s} {2:d} {3:d} {4:d} {5:d} {6} {7} {8} {9} {10} {11} $seed_add {12:s}
-""".format(initial_type, database, n_hydro, ev0_id, n_urqmd, n_threads,
+python3 hydro_plus_UrQMD_driver.py {0:s} {1:s} {2:d} {3:d} {4:d} {5:d} {6} {7} {8} {9} {10} {11} {12} $seed_add {13:s}
+""".format(initial_type, database, n_hydro, ev0_id, n_urqmd, n_threads, smashini_flag,
            ipglasma_flag, kompost_flag, hydro_flag, urqmd_flag, IS3D_flag, IS3D_continuous_flag, time_stamp))
     script.close()
 
@@ -584,8 +584,8 @@ def generate_script_analyze_spvn(folder_name, cluster_name, HBT_flag):
 
 def generate_event_folders(initial_condition_database, initial_condition_type,
                            package_root_path, code_path, working_folder,
-                           cluster_name, event_id, event_id_offset,
-                           n_hydro_per_job, n_urqmd_per_hydro, n_threads, walltime,
+                           cluster_name, event_id, event_id_offset, n_hydro_per_job, 
+                           n_urqmd_per_hydro, n_threads, walltime, smashini_flag,
                            time_stamp, ipglasma_flag, kompost_flag, hydro_flag,
                            urqmd_flag, GMC_flag, HBT_flag, NO_COLL_flag, 
                            IS3D_flag, IS3D_continuous_flag):
@@ -637,10 +637,12 @@ def generate_event_folders(initial_condition_database, initial_condition_type,
                     path.join(event_folder, "ipglasma/{}".format(link_i))),
                                 shell=True)
 
+        # here some scripts running smash on the fly
+
     generate_full_job_script(cluster_name, event_folder,
                              initial_condition_database, initial_condition_type,
-                             n_hydro_per_job, event_id_offset,
-                             n_urqmd_per_hydro, n_threads, walltime, ipglasma_flag,
+                             n_hydro_per_job, event_id_offset, n_urqmd_per_hydro, 
+                             n_threads, walltime, smashini_flag, ipglasma_flag,
                              kompost_flag, hydro_flag, urqmd_flag, IS3D_flag, 
                              IS3D_continuous_flag, time_stamp)
 
@@ -876,6 +878,7 @@ def main():
         print("seed = ", seed)
         args.nocopy = True
 
+    ## initial conditions
     initial_condition_type = (parameter_dict.control_dict['initial_state_type'])
     if initial_condition_type not in known_initial_types:
         print("\U0001F6AB  "
@@ -901,6 +904,14 @@ def main():
                 parameter_dict.ipglasma_dict['database_name_pattern'])
         IPGlasma_time_stamp = str(
             parameter_dict.kompost_dict['KoMPoSTInputs']['tIn'])
+    elif initial_condition_type == "SMASH_initial":
+        # if parameter_dict.smashini_dict['type'] == "self":
+        #     initial_condition_database = "self" # run smash on the fly
+        # else:
+        initial_condition_database = ( # pregenerated profiles
+            parameter_dict.smashini_dict['database_name_pattern'])
+        smashini_dict_time_stamp = str( # determine the runtime by hydro initial time
+            parameter_dict.music_dict['Initial_time_tau_0'])
     elif initial_condition_type == "3DMCGlauber_consttau":
         initial_condition_database = (
             parameter_dict.mcglauber_dict['database_name'])
@@ -917,6 +928,7 @@ def main():
         initial_condition_database = (
             parameter_dict.mcglauber_dict['database_name'])
 
+    # creat working folder
     working_folder_name = path.abspath(working_folder_name)
 
     if path.exists(working_folder_name) and args.continueFlag:
@@ -1007,6 +1019,11 @@ def main():
         kompost_flag = False
         if initial_condition_type == "IPGlasma+KoMPoST":
             kompost_flag = parameter_dict.control_dict['save_kompost_results']
+        smashini_flag = False
+        if (initial_condition_type in ("SMASH_initial")
+                and initial_condition_database == "self"):
+            smashini_flag = parameter_dict.control_dict['save_smashini_results']
+
         hydro_flag = parameter_dict.control_dict['save_hydro_surfaces']
         urqmd_flag = parameter_dict.control_dict['save_UrQMD_files']
         HBT_flag = False
@@ -1019,7 +1036,7 @@ def main():
                                initial_condition_type, code_package_path,
                                code_path, working_folder_name, cluster_name,
                                iev, event_id_offset, n_hydro_rescaled,
-                               n_urqmd_per_hydro, n_threads, walltime,
+                               n_urqmd_per_hydro, n_threads, walltime, smashini_flag,
                                IPGlasma_time_stamp, ipglasma_flag, kompost_flag,
                                hydro_flag, urqmd_flag, GMC_flag, HBT_flag, 
                                NO_COLL_flag, IS3D_flag, IS3D_continuous_flag)

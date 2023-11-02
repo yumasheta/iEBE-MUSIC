@@ -16,10 +16,17 @@ control_dict = {
     'use_iS3D': False,               # flag to use iS3D as sampler
     'save_ipglasma_results': False,   # flag to save IPGlasma results
     'save_kompost_results': False,    # flag to save kompost results
+    'save_smashini_results': False,   # flag to save smash initial results
     'save_hydro_surfaces': False,     # flag to save hydro surfaces
     'save_UrQMD_files': False,        # flag to save UrQMD files
 }
 
+
+# SMASH initial condition
+smashini_dict = {
+    'type': "self",  # self (generate on the fly)
+    'database_name_pattern': "SMASH_database/SMASH_7.7",  # options: IPGlasma, IPGlasma+KoMPoST,
+}
 
 # IPGlasma
 ipglasma_dict = {
@@ -596,6 +603,7 @@ hadronic_afterburner_toolkit_dict = {
 
 
 Parameters_list = [
+    (smashini_dict, "input", 3),
     (ipglasma_dict, "input", 3),
     (kompost_dict, "setup.ini", 4),
     (mcglauber_dict, "input", 0),
@@ -606,6 +614,7 @@ Parameters_list = [
 ]
 
 path_list = [
+    'model_parameters/SMASH_ini/',
     'model_parameters/IPGlasma/',
     'model_parameters/KoMPoST/',
     'model_parameters/3dMCGlauber/',

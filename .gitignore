@@ -118,6 +118,8 @@ osc2u
 urqmd
 playground
 
+SMASH_database/*
+
 3DMCGlauber_database/*
 OSC*
 playground*
