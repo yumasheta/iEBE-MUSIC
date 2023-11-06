@@ -10,19 +10,51 @@ control_dict = {
     'initial_state_type': "SMASH_initial",
     'walltime': "8:30:00",          # walltime to run
     'use_iS3D': False,               # flag to use iS3D as sampler
+    'save_smashini_results': True,   # flag to save smash initial results
     'save_hydro_surfaces': True,    # flag to save hydro surfaces
     'save_UrQMD_files': False,      # flag to save UrQMD files
 }
 
 
-# 3DMCGlauber model
-mcglauber_dict = {
-    'database_name': "3DMCGlauber_database/MCGlbAuAu7.7_00_10",  # path for initial conditions
+# SMASH initial condition
+smashini_dict =  {
+    'database_name_pattern': 'self',#"SMASH_database/SMASH_7.7",
+    'default': 'INFO',
+    'Modus': 'Collider',
+    'Time_Step_Mode': 'Fixed',
+    'Delta_Time': 0.1,
+    'End_Time': 20.0,
+    'Proper_Time': 3.2,
+    'Randomseed': -1,
+    'Nevents': 1,
+    'Output_Interval': 10.0,
+    'Format': 'Oscar2013',
+    'E_Kin': 1.23,
+    'Fermi_Motion': 'frozen',
 }
 
-# SMASH initial condition
-smashini_dict = {
-    'database_name_pattern': "SMASH_database/SMASH_7.7",  # options: IPGlasma, IPGlasma+KoMPoST,
+
+part2s_dict = {
+    'PATHIN':   'smash_init_results/',
+    'PATHOUT':  'smash_init_results/',
+
+    'NX':   201,
+    'NY':   201,
+    'NZ':   201,
+    'NETA': 201,
+
+    'DX':   0.15,
+    'DY':   0.15,
+    'DZ':   0.15,
+    'DETA': 0.15,
+
+
+    'SIGR': 0.6,
+    'SIGZ': 0.6,
+    'SIGETA':   0.6,
+
+
+    'TAU0' :    3.2, # over-written by Proper_Time in smash dict
 }
 
 
@@ -52,7 +84,7 @@ music_dict = {
     'eta_rhob_width_1': 0.07,        # Gaussian width for |eta| > |eta_0|
     'eta_rhob_width_2': 0.75,        # Gaussian width for |eta| < |eta_0|
     
-    'Initial_time_tau_0': 3.6,      # starting time of the hydrodynamic evolution (fm/c)
+    'Initial_time_tau_0': 3.6,      # starting time of the hydrodynamic evolution (fm/c) [overwritten by smash runtime]
                                     # max(tau_overlap, tau_0)
     'Delta_Tau': 0.010,             # time step to use in the evolution [fm/c]
     'boost_invariant':  0,          # whether the simulation is boost-invariant

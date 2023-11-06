@@ -2,6 +2,7 @@
 """This script generate all the running jobs."""
 
 import sys
+import os
 from os import path, mkdir
 import shutil
 import subprocess
@@ -209,6 +210,43 @@ python3 hydro_plus_UrQMD_driver.py {0:s} {1:s} {2:d} {3:d} {4:d} {5:d} {6} {7} {
 python3 hydro_plus_UrQMD_driver.py {0:s} {1:s} {2:d} {3:d} {4:d} {5:d} {6} {7} {8} {9} {10} {11} {12} $seed_add {13:s}
 """.format(initial_type, database, n_hydro, ev0_id, n_urqmd, n_threads, smashini_flag,
            ipglasma_flag, kompost_flag, hydro_flag, urqmd_flag, IS3D_flag, IS3D_continuous_flag, time_stamp))
+    script.close()
+
+
+def generate_script_smash_initial(folder_name, nthreads, cluster_name):
+    """This function generates script for smash initial condition"""
+    working_folder = folder_name
+
+    script = open(path.join(working_folder, "run_smash_initial.sh"), "w")
+
+    smash_init_results_folder = 'smash_init_results'
+    script.write("""#!/bin/bash
+
+results_folder={0:s}
+
+(
+cd smash_initial
+
+mkdir -p $results_folder
+rm -fr $results_folder/*
+
+# smash simulation
+./smash > run.log 2> run.err
+
+# deal with the output file
+mv data/0/particle_lists.oscar $results_folder/
+mv data/0/SMASH_IC.oscar $results_folder/
+mv run.log $results_folder/
+mv run.err $results_folder/
+rm -r data/0
+
+# part2s
+./part2s setup.ini > part2s_run.log 2> part2s_run.err
+mv part2s_run.log $results_folder/
+mv part2s_run.err $results_folder/
+)
+""".format(smash_init_results_folder))
+
     script.close()
 
 
@@ -605,6 +643,7 @@ def generate_event_folders(initial_condition_database, initial_condition_type,
                   'fetch_3DMCGlauber_event_from_hdf5_database.py'),
         event_folder)
 
+    # generate initial condition
     if initial_condition_database == "self":
         if initial_condition_type in ("3DMCGlauber_dynamical",
                                       "3DMCGlauber_consttau"):
@@ -636,8 +675,37 @@ def generate_event_folders(initial_condition_database, initial_condition_type,
                                   'ipglasma_code/{}'.format(link_i))),
                     path.join(event_folder, "ipglasma/{}".format(link_i))),
                                 shell=True)
+        elif initial_condition_type == 'SMASH_initial':
+            generate_script_smash_initial(event_folder, n_threads, cluster_name)
+            mkdir(path.join(event_folder, 'smash_initial'))
+            mkdir(path.join(event_folder, 'smash_initial/eos'))
+            mkdir(path.join(event_folder, 'smash_initial/eos/EOS'))
 
-        # here some scripts running smash on the fly
+            # smash setup
+            shutil.copyfile(path.join(param_folder, 'SMASH_ini/config.yaml'),
+                            path.join(event_folder, 'smash_initial/config.yaml'))
+            for link_i in ['smash']:
+                subprocess.call("ln -s {0:s} {1:s}".format(
+                    path.abspath(
+                        path.join(code_path,
+                                  'SMASH_code/build/{}'.format(link_i))),
+                    path.join(event_folder, "smash_initial/{}".format(link_i))),
+                                shell=True)
+            # part2s setup (share the same folder with smash)
+            shutil.copyfile(path.join(param_folder, 'part2s/setup.ini'),
+                            path.join(event_folder, 'smash_initial/setup.ini'))
+            for link_i in ['main']:
+                subprocess.call("ln -s {0:s} {1:s}".format(
+                    path.abspath(
+                        path.join(code_path,
+                                  'part2s_code/{}'.format(link_i))),
+                    path.join(event_folder, "smash_initial/part2s")),
+                                shell=True)
+            for link_i in ['neos_b']:
+                subprocess.call("ln -s {0:s} {1:s}".format(
+                    path.abspath(path.join(code_path, 'MUSIC_code/EOS/{}'.format(link_i))),
+                    path.join(event_folder, "smash_initial/eos/EOS/{}".format(link_i))),
+                                shell=True)
 
     generate_full_job_script(cluster_name, event_folder,
                              initial_condition_database, initial_condition_type,
@@ -658,6 +726,7 @@ def generate_event_folders(initial_condition_database, initial_condition_type,
                 path.join(event_folder, "kompost/{}".format(link_i))),
                             shell=True)
 
+    # generate hydro scripts
     generate_script_hydro(event_folder, n_threads, cluster_name)
 
     shutil.copytree(path.join(code_path, 'MUSIC'),
@@ -670,6 +739,7 @@ def generate_event_folders(initial_condition_database, initial_condition_type,
             path.join(event_folder, "MUSIC/{}".format(link_i))),
                         shell=True)
 
+    # generate afterburner scripts
     if IS3D_flag:
         generate_script_afterburner_iS3D(event_folder, cluster_name, NO_COLL_flag, IS3D_continuous_flag, n_threads)
     else:
@@ -905,13 +975,8 @@ def main():
         IPGlasma_time_stamp = str(
             parameter_dict.kompost_dict['KoMPoSTInputs']['tIn'])
     elif initial_condition_type == "SMASH_initial":
-        # if parameter_dict.smashini_dict['type'] == "self":
-        #     initial_condition_database = "self" # run smash on the fly
-        # else:
         initial_condition_database = ( # pregenerated profiles
             parameter_dict.smashini_dict['database_name_pattern'])
-        smashini_dict_time_stamp = str( # determine the runtime by hydro initial time
-            parameter_dict.music_dict['Initial_time_tau_0'])
     elif initial_condition_type == "3DMCGlauber_consttau":
         initial_condition_database = (
             parameter_dict.mcglauber_dict['database_name'])
@@ -942,6 +1007,7 @@ def main():
         code_path = path.join(working_folder_name, "codes")
         shutil.copytree("{}/codes".format(code_package_path), code_path)
 
+    # generate parameter files
     if args.bayes_file != "":
         args.bayes_file = path.join(path.abspath("."), args.bayes_file)
         subprocess.call("(cd {}/config; ".format(code_package_path)

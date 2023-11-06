@@ -107,6 +107,7 @@ venv.bak/
 .mypy_cache/
 
 codes/*_code
+SMASH
 3dMCGlauber
 MUSIC
 ipglasma

@@ -23,10 +23,46 @@ control_dict = {
 
 
 # SMASH initial condition
-smashini_dict = {
-    'type': "self",  # self (generate on the fly)
-    'database_name_pattern': "SMASH_database/SMASH_7.7",  # options: IPGlasma, IPGlasma+KoMPoST,
+smashini_dict =  {
+    'database_name_pattern': 'self',#"SMASH_database/SMASH_7.7",
+    'default': 'INFO',
+    'Modus': 'Collider',
+    'Time_Step_Mode': 'Fixed',
+    'Delta_Time': 0.1,
+    'End_Time': 20.0,
+    'Proper_Time': 3.2,
+    'Randomseed': -1,
+    'Nevents': 1,
+    'Output_Interval': 10.0,
+    'Format': 'Oscar2013',
+    'E_Kin': 1.23,
+    'Fermi_Motion': 'frozen',
 }
+
+
+part2s_dict = {
+    'PATHIN':   'test_pre3',
+    'PATHOUT':  'output',
+
+    'NX':   201,
+    'NY':   201,
+    'NZ':   201,
+    'NETA': 201,
+
+    'DX':   0.15,
+    'DY':   0.15,
+    'DZ':   0.15,
+    'DETA': 0.15,
+
+
+    'SIGR': 0.6,
+    'SIGZ': 0.6,
+    'SIGETA':   0.6,
+
+
+    'TAU0' :    3.2,
+}
+
 
 # IPGlasma
 ipglasma_dict = {
@@ -603,7 +639,8 @@ hadronic_afterburner_toolkit_dict = {
 
 
 Parameters_list = [
-    (smashini_dict, "input", 3),
+    (smashini_dict, "config.yaml", 5),
+    (part2s_dict, "setup.ini", 6),
     (ipglasma_dict, "input", 3),
     (kompost_dict, "setup.ini", 4),
     (mcglauber_dict, "input", 0),
@@ -615,6 +652,7 @@ Parameters_list = [
 
 path_list = [
     'model_parameters/SMASH_ini/',
+    'model_parameters/part2s/',
     'model_parameters/IPGlasma/',
     'model_parameters/KoMPoST/',
     'model_parameters/3dMCGlauber/',
@@ -662,7 +700,8 @@ def update_parameters_dict(par_dict_path, ran_seed):
             parameters_dict.music_dict['s_factor'] = 1.0
             parameters_dict.music_dict['Initial_time_tau_0'] = (
                     kompost_dict['KoMPoSTInputs']['tOut'])
-    else:
+    elif initial_condition_type in ("3DMCGlauber_dynamical",
+                                      "3DMCGlauber_consttau"):
         mcglauber_dict.update(parameters_dict.mcglauber_dict)
 
         mcglauber_dict['seed'] = ran_seed       # set random seed
@@ -677,6 +716,26 @@ def update_parameters_dict(par_dict_path, ran_seed):
 
         if 'Include_Rhob_Yes_1_No_0' not in parameters_dict.music_dict:
             parameters_dict.music_dict['Include_Rhob_Yes_1_No_0'] = 1
+    elif initial_condition_type == "SMASH_initial":
+        smashini_dict.update(parameters_dict.smashini_dict)
+
+        # set random seed for smash
+        smashini_dict['Randomseed'] = ran_seed
+
+        # parameters for part2s
+        part2s_dict.update(parameters_dict.part2s_dict)
+        part2s_dict['TAU0'] = smashini_dict['Proper_Time']
+
+        # match some MUSIC parameters with initial condition parameters
+        if 'Initial_profile' not in parameters_dict.music_dict:
+            parameters_dict.music_dict['Initial_profile'] = 21
+        if 'Initial_Distribution_input_filename' not in parameters_dict.music_dict:
+            parameters_dict.music_dict[
+                'Initial_Distribution_input_filename'] = (
+                        'initial/SMASH_ini.dat')
+
+        parameters_dict.music_dict['Initial_time_tau_0'] = (
+                smashini_dict['Proper_Time'] )
 
     if parameters_dict.music_dict['boost_invariant'] == 1:
         parameters_dict.iss_dict['hydro_mode'] = 1
@@ -716,12 +775,14 @@ def output_parameters_to_files(workfolder="."):
         if not path.exists(output_folder):
             makedirs(output_folder)
         f = open(path.join(output_folder, fname), "w")
+        if itype == 6:
+            f.write("[Input]\n")
         for key_name in parameters_dict:
             if itype in (0, 2):
                 f.write("{parameter_name}  {parameter_value}\n".format(
                     parameter_name=key_name,
                     parameter_value=parameters_dict[key_name]))
-            elif itype == 1:
+            elif itype in (1, 6):
                 f.write("{parameter_name} = {parameter_value}\n".format(
                     parameter_name=key_name,
                     parameter_value=parameters_dict[key_name]))
@@ -741,6 +802,48 @@ def output_parameters_to_files(workfolder="."):
             f.write("EndOfData")
         elif itype == 3:
             f.write("EndOfFile")
+            
+        # smash input config.yaml    
+        if itype == 5: 
+            f.write("""Version: 1.8
+Logging:
+  default: INFO
+
+General:
+    Modus:         Collider
+    Time_Step_Mode: Fixed
+    Delta_Time:     {0:f}
+    End_Time:       {1:f}
+    Randomseed:     {2:d}
+    Testparticles: 1
+    Nevents:        {3:d}
+
+Output:
+  Output_Interval: 0.05
+  Particles:
+        Format:    ["Oscar2013"]
+        Extended: True
+        Only_Final: No
+  Initial_Conditions:
+    Format: [ Oscar2013]
+    Extended: True
+    Proper_Time: {4:f}
+
+Modi:
+    Collider:
+        Projectile:
+            Particles: {{2212: 79, 2112: 118}}
+        Target:
+            Particles: {{2212: 79, 2112: 118}}
+        Sqrtsnn: 7.7
+        Calculation_Frame: "center of velocity"
+        Impact:
+            Range: [0.0228994, 3.37646]
+        
+        Fermi_Motion: "frozen"
+        Collisions_Within_Nucleus: false
+""".format(parameters_dict['Delta_Time'], parameters_dict['End_Time'], parameters_dict['Randomseed'], parameters_dict['Nevents'], parameters_dict['Proper_Time']))
+        
         f.close()
 
 

@@ -3,6 +3,7 @@
 
 from multiprocessing import Pool
 from subprocess import call
+import os
 from os import path, mkdir, remove, makedirs
 from glob import glob
 import sys
@@ -30,12 +31,14 @@ def fecth_an_3DMCGlauber_smooth_event(database_path, iev):
     filelist = glob(path.join(database_path, 'nuclear_thickness_TA_*.dat'))
     return (filelist[iev])
 
+
 def fecth_a_SMASH_initial_event(database_path, iev):
     """This function returns the filename of an initial condition in the
        database_path folder
     """
     filelist = glob(path.join(database_path, 'SMASH_ini.dat'))
     return (filelist[iev])
+
 
 def get_initial_condition(database, initial_type, iev, seed_add,
                           final_results_folder, time_stamp_str="0.4"):
@@ -96,13 +99,30 @@ def get_initial_condition(database, initial_type, iev, seed_add,
         file_name = fecth_an_3DMCGlauber_smooth_event(database, iev)
         return file_name
     elif initial_type == "SMASH_initial":
-        file_name = fecth_a_SMASH_initial_event(database, iev)
-        return file_name
+        if database == "self":
+            file_name = "SMASH_ini.dat"
+            if not path.exists(file_name):
+                run_smashini_event(final_results_folder)
+                call("mv smash_initial/smash_init_results/{0:s} {0:s}".format(file_name),
+                     shell=True)
+            else:
+                print("SMASH_initial event exists ...")
+                print("No need to rerun ...")
+            makedirs("MUSIC/initial", exist_ok=True)
+            shutil.copy(file_name, "MUSIC/initial/SMASH_ini.dat")
+        else:
+            file_name = fecth_a_SMASH_initial_event(database, iev)
+            return file_name
     else:
         print("\U0001F6AB  "
               + "Do not recognize the initial condition type: {}".format(
                   initial_type))
         exit(1)
+
+
+def run_smashini_event(final_results_folder):
+    """This function runs smash as initial condition"""
+    call("bash ./run_smash_initial.sh", shell=True)
 
 
 def run_ipglasma(iev):
@@ -486,6 +506,21 @@ def zip_spvn_results_into_hdf5(final_results_folder, event_id, para_dict):
                     if path.isfile(prefile):
                         shutil.move(prefile, spvnfolder)
 
+            # save smash initial conditions
+            if ("SMASH_initial" in para_dict['initial_type'] and para_dict['initial_condition'] == "self"
+                    and para_dict['save_smash_ini']):
+                smash_initial_folder = path.join(
+                    final_results_folder,
+                    "smash_initial_results_{}".format(event_id))
+
+                smash_inifile = path.join(smash_initial_folder, 'particle_lists.oscar')
+                if path.isfile(smash_inifile):
+                    shutil.move(smash_inifile, spvnfolder)
+
+                smash_inifile = path.join(smash_initial_folder, 'SMASH_IC.oscar')
+                if path.isfile(smash_inifile):
+                    shutil.move(smash_inifile, spvnfolder)
+
         hf = h5py.File("{0}.h5".format(results_name), "w")
         gtemp = hf.create_group("{0}".format(results_name))
         file_list = glob(path.join(spvnfolder, "*"))
@@ -512,6 +547,7 @@ def zip_spvn_results_into_hdf5(final_results_folder, event_id, para_dict):
 
 def remove_unwanted_outputs(final_results_folder,
                             event_id,
+                            save_smash_ini=True,
                             save_ipglasma=True,
                             save_kompost=True,
                             save_hydro=True,
@@ -596,6 +632,7 @@ def main(para_dict_):
         print("[{}] Generate initial condition ... ".format(curr_time),
               flush=True)
 
+        # run a dynamic initial model or fetch pregernated profiles from database
         ifile = get_initial_condition(initial_condition, initial_type,
                                       iev,
                                       para_dict_['seed_add'],
@@ -623,7 +660,9 @@ def main(para_dict_):
                            + ".music_init_flowNonLinear_pimunuTransverse.txt")),
                 hydro_initial_file),
                  shell=True)
-        if initial_type == "SMASH_initial":
+        # copy pregenerated smash initial profile for hydro run
+        if (initial_type == "SMASH_initial"
+                and initial_condition != "self"):
             filename = ifile.split("/")[-1]
             filepath = initial_condition
             makedirs("MUSIC/initial", exist_ok=True)
@@ -676,6 +715,7 @@ def main(para_dict_):
             # remove the unwanted outputs if event is finished properly
             if status:
                 remove_unwanted_outputs(final_results_folder, event_id,
+                                        para_dict_['save_smash_ini'],
                                         para_dict_['save_ipglasma'],
                                         para_dict_['save_kompost'],
                                         para_dict_['save_hydro'],
@@ -707,6 +747,7 @@ def main(para_dict_):
                 # remove the unwanted outputs if event is finished properly
                 if status:
                     remove_unwanted_outputs(final_results_folder, event_id,
+                                            para_dict_['save_smash_ini'],
                                             para_dict_['save_ipglasma'],
                                             para_dict_['save_kompost'],
                                             para_dict_['save_hydro'],
@@ -752,7 +793,7 @@ if __name__ == "__main__":
         'hydro_id0': HYDRO_EVENT_ID0,
         'n_urqmd': N_URQMD,
         'num_threads': N_THREADS,
-        'save_smashini_results': SAVE_SMASHINI,
+        'save_smash_ini': SAVE_SMASHINI,
         'save_ipglasma': SAVE_IPGLASMA,
         'save_kompost': SAVE_KOMPOST,
         'save_hydro': SAVE_HYDRO,
