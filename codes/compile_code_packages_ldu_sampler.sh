@@ -51,6 +51,31 @@ number_of_cores_to_compile=$(( ${number_of_cores} > 10 ? 10 : ${number_of_cores}
 #    exit $status
 #fi
 
+# compile pre_equlibrium_smash (called part2s in the workflow)
+echo -e "${Green}compile part2s ... ${NC}"
+(
+    cd part2s_code
+    mkdir -p build
+    cd build
+    cmake ..
+    make -j${number_of_cores_to_compile}
+    make install
+    cd ../script
+    g++ convert_to_binary_SMASH_ini.cpp -lz -o convert_to_binary_SMASH_ini.e
+    mv convert_to_binary_SMASH_ini.e ../
+    g++ convert_to_binary_SMASH_evo.cpp -lz -o convert_to_binary_SMASH_evo.e
+    mv convert_to_binary_SMASH_evo.e ../
+)
+status=$?
+if [ $status -ne 0 ]; then
+    exit $status
+fi
+mkdir -p part2s
+cp part2s_code/convert_to_binary_SMASH_evo.e part2s/
+cp part2s_code/convert_to_binary_SMASH_ini.e part2s/
+cp part2s_code/test.ini part2s/
+
+
 # compile MUSIC
 echo -e "${Green}compile MUSIC ... ${NC}"
 (

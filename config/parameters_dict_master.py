@@ -24,7 +24,8 @@ control_dict = {
 
 # SMASH initial condition
 smashini_dict =  {
-    'database_name_pattern': 'self',#"SMASH_database/SMASH_7.7",
+    'database_name_pattern': 'self',  # "SMASH_database/SMASH_7.7",
+    'use_averaged_smash': False,       # average over smash events to construct initial condition
     'default': 'INFO',
     'Modus': 'Collider',
     'Time_Step_Mode': 'Fixed',
@@ -37,11 +38,15 @@ smashini_dict =  {
     'Format': 'Oscar2013',
     'E_Kin': 1.23,
     'Fermi_Motion': 'frozen',
+    'b_min': 0.0228994, 
+    'b_max': 3.37646,
+    'ecm': 7.7,
 }
 
 
 part2s_dict = {
-    'PATHIN':   'test_pre3',
+    'PATHIN':   'input/evo.bin',
+    'PATHIN2':  'input/ini.bin',
     'PATHOUT':  'output',
 
     'NX':   201,
@@ -61,6 +66,10 @@ part2s_dict = {
 
 
     'TAU0' :    3.2,
+
+    'EOS_ID' : 12,
+
+    'read_binary': 1,
 }
 
 
@@ -737,6 +746,16 @@ def update_parameters_dict(par_dict_path, ran_seed):
         parameters_dict.music_dict['Initial_time_tau_0'] = (
                 smashini_dict['Proper_Time'] )
 
+        parameters_dict.music_dict['Grid_size_in_x']   =   part2s_dict['NX']
+        parameters_dict.music_dict['Grid_size_in_y']   =   part2s_dict['NY']
+        parameters_dict.music_dict['Grid_size_in_eta'] =   part2s_dict['NETA']
+
+        parameters_dict.music_dict['X_grid_size_in_fm'] =   (part2s_dict['NX'] - 1)   * part2s_dict['DX']
+        parameters_dict.music_dict['Y_grid_size_in_fm'] =   (part2s_dict['NY'] - 1)   * part2s_dict['DY']
+        parameters_dict.music_dict['Eta_grid_size']     =   (part2s_dict['NETA'] - 1) * part2s_dict['DETA']
+
+        parameters_dict.music_dict['EOS_to_use'] = part2s_dict['EOS_ID']
+
     if parameters_dict.music_dict['boost_invariant'] == 1:
         parameters_dict.iss_dict['hydro_mode'] = 1
         parameters_dict.is3d_dict['dimension'] = 2
@@ -835,14 +854,15 @@ Modi:
             Particles: {{2212: 79, 2112: 118}}
         Target:
             Particles: {{2212: 79, 2112: 118}}
-        Sqrtsnn: 7.7
+        Sqrtsnn: {7:f}
         Calculation_Frame: "center of velocity"
         Impact:
-            Range: [0.0228994, 3.37646]
+            Range: [{5:f}, {6:f}]
         
         Fermi_Motion: "frozen"
         Collisions_Within_Nucleus: false
-""".format(parameters_dict['Delta_Time'], parameters_dict['End_Time'], parameters_dict['Randomseed'], parameters_dict['Nevents'], parameters_dict['Proper_Time']))
+""".format(parameters_dict['Delta_Time'], parameters_dict['End_Time'], parameters_dict['Randomseed'], parameters_dict['Nevents'], 
+        parameters_dict['Proper_Time'], parameters_dict['b_min'], parameters_dict['b_max'], parameters_dict['ecm']))
         
         f.close()
 

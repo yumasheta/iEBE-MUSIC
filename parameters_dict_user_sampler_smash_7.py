@@ -18,12 +18,14 @@ control_dict = {
 
 # SMASH initial condition
 smashini_dict =  {
-    'database_name_pattern': 'self',#"SMASH_database/SMASH_7.7",
+    'database_name_pattern': 'self',  # 1. self (on the fly) 2. "SMASH_database/SMASH_7.7" (pregenerated)
+    'use_averaged_smash': True,       # average over smash events to construct initial condition
     'default': 'INFO',
     'Modus': 'Collider',
+    'ecm': 7.7,
     'Time_Step_Mode': 'Fixed',
     'Delta_Time': 0.1,
-    'End_Time': 20.0,
+    'End_Time': 200.0,
     'Proper_Time': 3.2,
     'Randomseed': -1,
     'Nevents': 1,
@@ -31,30 +33,36 @@ smashini_dict =  {
     'Format': 'Oscar2013',
     'E_Kin': 1.23,
     'Fermi_Motion': 'frozen',
+    'b_min': 0.0228994, 
+    'b_max': 3.37646,
 }
 
 
 part2s_dict = {
-    'PATHIN':   'smash_init_results/',
-    'PATHOUT':  'smash_init_results/',
+    'PATHIN':   '../SMASH_evo.binary',
+    'PATHIN2':   '../SMASH_ini.binary',
+    'PATHOUT':  './',
 
     'NX':   201,
     'NY':   201,
     'NZ':   201,
-    'NETA': 201,
+    'NETA': 61,
 
-    'DX':   0.15,
-    'DY':   0.15,
-    'DZ':   0.15,
+    'DX':   0.3,
+    'DY':   0.3,
+    'DZ':   0.3,
     'DETA': 0.15,
 
-
-    'SIGR': 0.6,
-    'SIGZ': 0.6,
-    'SIGETA':   0.6,
+    'SIGR': 1.0,
+    'SIGZ': 0.4,
+    'SIGETA': 0.4,
 
 
     'TAU0' :    3.2, # over-written by Proper_Time in smash dict
+
+    'EOS_ID' : 12,
+
+    'read_binary': 1,
 }
 
 

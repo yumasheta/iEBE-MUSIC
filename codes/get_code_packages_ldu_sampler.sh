@@ -17,6 +17,11 @@
 # git clone --depth=1 https://github.com/j-f-paquet/kompost kompost_code
 # rm -fr kompost_code/.git
 
+# download part2s
+rm -fr part2s_code
+git clone --depth=1 https://github.com/xyw2016/pre_equlibrium_smash.git part2s_code
+rm -fr part2s_code/.git
+
 # download MUSIC
 rm -fr MUSIC_code
 git clone --depth=1 https://github.com/LipeiDu/MUSIC.git -b du_viscous MUSIC_code
