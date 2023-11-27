@@ -238,6 +238,9 @@ rm -fr $results_folder/*
 # smash simulation
 ./smash -o $results_folder > run.log 2> run.err
 
+mv run.log $results_folder/
+mv run.err $results_folder/
+
 )
 """.format(smash_init_results_folder))
 
@@ -250,18 +253,27 @@ def generate_script_part2s(folder_name, n_smashini, cluster_name):
 
     script = open(path.join(working_folder, "run_part2s.sh"), "w")
 
+    part2s_results_folder = 'part2s_results'
     script.write("""#!/bin/bash
 
 unalias ls 2>/dev/null
 
 (
 
+results_folder={0:s}
+
 cd part2s
+
+mkdir -p $results_folder
+rm -fr $results_folder/*
 
 ./Preequilibrium setup.ini > run.log 2> run.err
 
+mv run.log $results_folder/
+mv run.err $results_folder/
+
 )
-""")
+""".format(part2s_results_folder))
 
     script.close()
 

@@ -110,18 +110,42 @@ def get_initial_condition(database, initial_type, iev, use_averaged_smash, n_urq
 
                 run_smashini_shell(n_smashini, final_results_folder, iev)
 
-                for iev in range(n_smashini):
+                for ies in range(n_smashini):
                     call("./part2s/convert_to_binary_SMASH_ini.e "
-                         + "SMASHini_{}/smash_init_results/SMASH_IC.oscar SMASH_ini.binary".format(iev),
+                         + "SMASHini_{}/smash_init_results/SMASH_IC.oscar SMASH_ini.binary".format(ies),
                          shell=True)
                     call("./part2s/convert_to_binary_SMASH_evo.e "
-                         + "SMASHini_{}/smash_init_results/particle_lists.oscar SMASH_evo.binary".format(iev),
+                         + "SMASHini_{}/smash_init_results/particle_lists.oscar SMASH_evo.binary".format(ies),
                          shell=True)
 
-                    call("rm SMASHini_{}/smash_init_results/SMASH_IC.oscar".format(iev), shell=True)
-                    call("rm SMASHini_{}/smash_init_results/particle_lists.oscar".format(iev), shell=True)
+                    call("rm SMASHini_{}/smash_init_results/SMASH_IC.oscar".format(ies), shell=True)
+                    call("rm SMASHini_{}/smash_init_results/particle_lists.oscar".format(ies), shell=True)
 
                 run_part2s_event(iev)
+
+                makedirs("MUSIC/initial", exist_ok=True)
+
+                shutil.copy("part2s/SMASH_ini.dat", "MUSIC/initial/SMASH_ini.dat")
+
+                shutil.move("part2s/SMASH_ini.dat", "part2s/part2s_results/SMASH_ini.dat")
+                shutil.move("part2s/pre_equlibrium_evo_txyz.dat", "part2s/part2s_results/pre_equlibrium_evo_txyz.dat")
+
+                part2s_source_folder = "part2s/part2s_results"
+                part2s_destination_folder = path.join(final_results_folder, "part2s_results_{}".format(iev))
+
+                if not os.path.exists(part2s_destination_folder):
+                    os.makedirs(part2s_destination_folder)
+
+                for filename in os.listdir(part2s_source_folder):
+                    part2s_source_file = os.path.join(part2s_source_folder, filename)
+                    if os.path.isfile(part2s_source_file):
+                        part2s_destination_file = os.path.join(part2s_destination_folder, filename)
+                        shutil.move(part2s_source_file, part2s_destination_file)
+
+                # shutil.move("part2s/part2s_results", path.join(final_results_folder, "part2s_results_{}".format(event_id)))
+
+                call("rm SMASH_ini.binary SMASH_evo.binary", shell=True)
+
             else:
                 print("SMASH_initial event exists in MUSIC/initial/ ...")
                 print("No need to rerun ...")
@@ -546,20 +570,6 @@ def zip_spvn_results_into_hdf5(final_results_folder, event_id, para_dict):
                     if path.isfile(prefile):
                         shutil.move(prefile, spvnfolder)
 
-            # save smash initial conditions
-            if ("SMASH_initial" in para_dict['initial_type'] and para_dict['initial_condition'] == "self"
-                    and para_dict['save_smash_ini']):
-                smash_initial_folder = path.join(
-                    final_results_folder,
-                    "smash_initial_results_{}".format(event_id))
-
-                smash_inifile = path.join(smash_initial_folder, 'particle_lists.oscar')
-                if path.isfile(smash_inifile):
-                    shutil.move(smash_inifile, spvnfolder)
-
-                smash_inifile = path.join(smash_initial_folder, 'SMASH_IC.oscar')
-                if path.isfile(smash_inifile):
-                    shutil.move(smash_inifile, spvnfolder)
 
         hf = h5py.File("{0}.h5".format(results_name), "w")
         gtemp = hf.create_group("{0}".format(results_name))
@@ -606,6 +616,11 @@ def remove_unwanted_outputs(final_results_folder,
         kompostfolder = path.join(final_results_folder,
                                   "kompost_results_{}".format(event_id))
         shutil.rmtree(kompostfolder, ignore_errors=True)
+
+    if not save_smash_ini:
+        smashinifolder = path.join(final_results_folder,
+                                  "part2s_results_{}".format(event_id))
+        shutil.rmtree(smashinifolder, ignore_errors=True)    
 
     if not save_hydro:
         hydrofolder = path.join(final_results_folder,
@@ -703,19 +718,13 @@ def main(para_dict_):
                 hydro_initial_file),
                  shell=True)
 
-        # either copy pregenerated smash initial profile or construct it from particle lists for hydro run
-        if (initial_type == "SMASH_initial"):
-            if initial_condition != "self":
+        # copy pregenerated smash initial profile for hydro run
+        if (initial_type == "SMASH_initial" and initial_condition != "self"):
                 filename = ifile.split("/")[-1]
                 filepath = initial_condition
                 makedirs("MUSIC/initial", exist_ok=True)
                 shutil.copy(path.join(filepath, filename),
                             "MUSIC/initial/SMASH_ini.dat")
-            else:
-                makedirs("MUSIC/initial", exist_ok=True)
-                shutil.copy("part2s/SMASH_ini.dat", "MUSIC/initial/SMASH_ini.dat")
-
-                call("rm SMASH_ini.binary SMASH_evo.binary", shell=True)
 
         # first run hydro
         hydro_success, hydro_folder_name = run_hydro_event(

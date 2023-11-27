@@ -58,7 +58,6 @@ echo -e "${Green}compile part2s ... ${NC}"
     mkdir -p build
     cd build
     cmake ..
-    make -j${number_of_cores_to_compile}
     make install
     cd ../script
     g++ convert_to_binary_SMASH_ini.cpp -lz -o convert_to_binary_SMASH_ini.e
