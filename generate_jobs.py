@@ -410,7 +410,7 @@ export OMP_NUM_THREADS={0:d}
     script.close()
 
 
-def generate_script_afterburner(folder_name, cluster_name, HBT_flag, GMC_flag, NO_COLL_flag):
+def generate_script_afterburner_iSS_UrQMD(folder_name, cluster_name, HBT_flag, GMC_flag, NO_COLL_flag):
     """This function generates script for hadronic afterburner"""
     working_folder = folder_name
 
@@ -508,7 +508,7 @@ do
     script.close()
 
 
-def generate_script_afterburner_iS3D(folder_name, cluster_name, NO_COLL_flag, IS3D_continuous_flag, nthreads):
+def generate_script_afterburner_iS3D_UrQMD(folder_name, cluster_name, NO_COLL_flag, IS3D_continuous_flag, nthreads):
     """This function generates script for hadronic afterburner"""
     working_folder = folder_name
 
@@ -624,6 +624,81 @@ do
 """)
     script.close()
 
+def generate_script_afterburner_iS3D_SMASH(folder_name, cluster_name, NO_COLL_flag, IS3D_continuous_flag, nthreads):
+    """This function generates script for hadronic afterburner"""
+    working_folder = folder_name
+
+    logfile = ""
+    if cluster_name != "OSG":
+        logfile = " >> run.log"
+
+    script = open(path.join(working_folder, "run_afterburner.sh"), "w")
+    script.write("""#!/bin/bash
+
+unalias ls 2>/dev/null
+
+SubEventId=$1
+
+(
+cd UrQMDev_$SubEventId
+
+mkdir -p UrQMD_results
+rm -fr UrQMD_results/*
+
+for iev in `ls hydro_event | grep "surface"`
+do
+    cd iS3D
+    mkdir -p results
+    """)
+    # run iS3D sampler
+    script.write("""
+    mkdir -p results/sampled
+    mkdir -p results/sampled/vn
+    mkdir -p results/sampled/dN_taudtaudy
+    mkdir -p results/sampled/dN_2pirdrdy
+    mkdir -p results/sampled/dN_dphisdy
+    mkdir -p results/sampled/dN_2pipTdpTdy
+    mkdir -p results/sampled/dN_dphipdy
+    mkdir -p results/sampled/dN_dy
+    mkdir -p results/sampled/dN_deta
+    """)
+    script.write("""
+    mkdir -p input
+    rm -fr input/*
+    mv ../hydro_event/$iev input/surface.dat
+    mv ../hydro_event/music_input input/music_input
+    if [ $SubEventId = "0" ]; then
+    """)
+    script.write("    ./iS3D.e {0}".format(logfile))
+    script.write("""
+    else
+        ./iS3D.e > run.log
+    fi
+    """)
+    # run SMASH afterburner
+    script.write("""
+    cd ../SMASH
+    mv ../iS3D/results/particle_list_osc.dat ./particle_list_osc0
+    mkdir -p results
+    ./smash -i config.yaml -o ./results > run.log 2> run.err
+    mv results/particle_lists.oscar ../UrQMD_results/particle_list.oscar
+    rm ./particle_list_osc0
+        """)
+
+    script.write("""
+    cd ..
+    ../hadronic_afterburner_toolkit/convert_to_binary_SMASH.e UrQMD_results/particle_list.oscar
+    rm -fr UrQMD_results/particle_list.oscar
+    """)
+    script.write("""
+    done
+
+    rm -fr hydro_event
+)
+    """)
+    script.close()
+
+
 def generate_script_analyze_spvn(folder_name, cluster_name, HBT_flag):
     """This function generates script for analysis"""
     working_folder = folder_name
@@ -654,7 +729,7 @@ def generate_event_folders(initial_condition_database, initial_condition_type,
                            n_urqmd_per_hydro, n_threads, walltime, smashini_flag, use_averaged_smash,
                            time_stamp, ipglasma_flag, kompost_flag, hydro_flag,
                            urqmd_flag, GMC_flag, HBT_flag, NO_COLL_flag, 
-                           IS3D_flag, IS3D_continuous_flag):
+                           IS3D_flag, IS3D_continuous_flag, use_smash_afterburner_flag):
     """This function creates the event folder structure"""
 
     event_folder = path.join(working_folder, 'event_%d' % event_id)
@@ -787,9 +862,12 @@ def generate_event_folders(initial_condition_database, initial_condition_type,
 
     # generate afterburner scripts
     if IS3D_flag:
-        generate_script_afterburner_iS3D(event_folder, cluster_name, NO_COLL_flag, IS3D_continuous_flag, n_threads)
+        if use_smash_afterburner_flag:
+            generate_script_afterburner_iS3D_SMASH(event_folder, cluster_name, NO_COLL_flag, IS3D_continuous_flag, n_threads)
+        else:    
+            generate_script_afterburner_iS3D_UrQMD(event_folder, cluster_name, NO_COLL_flag, IS3D_continuous_flag, n_threads)
     else:
-        generate_script_afterburner(event_folder, cluster_name, HBT_flag, GMC_flag, NO_COLL_flag)
+        generate_script_afterburner_iSS_UrQMD(event_folder, cluster_name, HBT_flag, GMC_flag, NO_COLL_flag)
 
     generate_script_analyze_spvn(event_folder, cluster_name, HBT_flag)
 
@@ -799,35 +877,53 @@ def generate_event_folders(initial_condition_database, initial_condition_type,
                                      'UrQMDev_{0:d}'.format(iev))
         mkdir(sub_event_folder)
 
-        # iSS
-        mkdir(path.join(sub_event_folder, 'iSS'))
-        shutil.copyfile(path.join(param_folder, 'iSS/iSS_parameters.dat'),
-                        path.join(sub_event_folder, 'iSS/iSS_parameters.dat'))
-        for link_i in ['iSS_tables', 'iSS.e']:
-            subprocess.call("ln -s {0:s} {1:s}".format(
-                path.abspath(path.join(code_path,
-                                       'iSS_code/{}'.format(link_i))),
-                path.join(sub_event_folder, "iSS/{}".format(link_i))),
-                            shell=True)
-        # iS3D
-        mkdir(path.join(sub_event_folder, 'iS3D'))
-        shutil.copyfile(path.join(param_folder, 'iS3D/iS3D_parameters.dat'),
-                        path.join(sub_event_folder, 'iS3D/iS3D_parameters.dat'))
-        for link_i in ['tables', 'PDG', 'deltaf_coefficients', 'iS3D.e']:
-            subprocess.call("ln -s {0:s} {1:s}".format(
-                path.abspath(path.join(code_path,
-                                       'iS3D_code/{}'.format(link_i))),
-                path.join(sub_event_folder, "iS3D/{}".format(link_i))),
-                            shell=True)
+        if not IS3D_flag:
+            # iSS
+            mkdir(path.join(sub_event_folder, 'iSS'))
+            shutil.copyfile(path.join(param_folder, 'iSS/iSS_parameters.dat'),
+                            path.join(sub_event_folder, 'iSS/iSS_parameters.dat'))
+            for link_i in ['iSS_tables', 'iSS.e']:
+                subprocess.call("ln -s {0:s} {1:s}".format(
+                    path.abspath(path.join(code_path,
+                                           'iSS_code/{}'.format(link_i))),
+                    path.join(sub_event_folder, "iSS/{}".format(link_i))),
+                                shell=True)
+        else:
+            # iS3D
+            mkdir(path.join(sub_event_folder, 'iS3D'))
+            shutil.copyfile(path.join(param_folder, 'iS3D/iS3D_parameters.dat'),
+                            path.join(sub_event_folder, 'iS3D/iS3D_parameters.dat'))
+            for link_i in ['tables', 'PDG', 'deltaf_coefficients', 'iS3D.e']:
+                subprocess.call("ln -s {0:s} {1:s}".format(
+                    path.abspath(path.join(code_path,
+                                           'iS3D_code/{}'.format(link_i))),
+                    path.join(sub_event_folder, "iS3D/{}".format(link_i))),
+                                shell=True)
 
-        shutil.copytree(path.join(code_path, 'osc2u'),
-                        path.join(sub_event_folder, 'osc2u'))
-        shutil.copytree(path.join(code_path, 'urqmd'),
-                        path.join(sub_event_folder, 'urqmd'))
-        subprocess.call("ln -s {0:s} {1:s}".format(
-            path.abspath(path.join(code_path, 'urqmd_code/urqmd/urqmd.e')),
-            path.join(sub_event_folder, "urqmd/urqmd.e")),
-                        shell=True)
+        if not use_smash_afterburner_flag:
+            # urqmd
+            shutil.copytree(path.join(code_path, 'osc2u'),
+                            path.join(sub_event_folder, 'osc2u'))
+            shutil.copytree(path.join(code_path, 'urqmd'),
+                            path.join(sub_event_folder, 'urqmd'))
+            subprocess.call("ln -s {0:s} {1:s}".format(
+                path.abspath(path.join(code_path, 'urqmd_code/urqmd/urqmd.e')),
+                path.join(sub_event_folder, "urqmd/urqmd.e")),
+                            shell=True)
+        else:
+            # smash
+            mkdir(path.join(sub_event_folder, 'SMASH'))
+                    
+            shutil.copyfile(path.join(param_folder, 'SMASH/config.yaml'),
+                            path.join(sub_event_folder, 'SMASH/config.yaml'))
+
+            for link_i in ['smash']:
+                subprocess.call("ln -s {0:s} {1:s}".format(
+                    path.abspath(
+                        path.join(code_path,
+                                  'SMASH_code/build/{}'.format(link_i))),
+                    path.join(sub_event_folder, "SMASH/{}".format(link_i))),
+                                shell=True)
 
         if HBT_flag:
             shutil.copytree(path.join(code_path,
@@ -1132,6 +1228,7 @@ def main():
         if initial_condition_type == "IPGlasma+KoMPoST":
             kompost_flag = parameter_dict.control_dict['save_kompost_results']
         smashini_flag = False
+        use_averaged_smash = False
         if (initial_condition_type in ("SMASH_initial")
                 and initial_condition_database == "self"):
             smashini_flag = parameter_dict.control_dict['save_smashini_results']
@@ -1139,6 +1236,9 @@ def main():
 
         hydro_flag = parameter_dict.control_dict['save_hydro_surfaces']
         urqmd_flag = parameter_dict.control_dict['save_UrQMD_files']
+
+        use_smash_afterburner_flag = parameter_dict.control_dict['use_SMASH_afterburner']
+
         HBT_flag = False
         if "analyze_HBT" in parameter_dict.hadronic_afterburner_toolkit_dict:
             if parameter_dict.hadronic_afterburner_toolkit_dict[
@@ -1152,7 +1252,7 @@ def main():
                                n_threads, walltime, smashini_flag, use_averaged_smash,
                                IPGlasma_time_stamp, ipglasma_flag, kompost_flag,
                                hydro_flag, urqmd_flag, GMC_flag, HBT_flag, 
-                               NO_COLL_flag, IS3D_flag, IS3D_continuous_flag)
+                               NO_COLL_flag, IS3D_flag, IS3D_continuous_flag,use_smash_afterburner_flag)
         event_id_offset += n_hydro_rescaled
 
     sys.stdout.write("\n")
