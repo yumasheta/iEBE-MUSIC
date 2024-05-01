@@ -749,6 +749,8 @@ def create_a_working_folder(workfolder_path):
             print("bye~\n")
             exit(0)
 
+    with open(path.join(workfolder_path, ".gitignore"), "w") as f:
+        f.write("*\n")
 
 def main():
     """This is the main funciton"""
