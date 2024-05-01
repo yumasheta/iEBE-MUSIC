@@ -5,7 +5,6 @@
 
 from os import path, makedirs
 import sys
-import shutil
 import argparse
 
 # control parameters
@@ -294,6 +293,7 @@ iss_dict = {
     'turn_on_rhob': 0,  # read in net baryon chemical potential
     'turn_on_diff': 0,  # read in baryon diffusion current
 
+    'f0_is_not_small': 1,      # include (1 \pm f_0) factor in delta f
     'include_deltaf_shear': 1,      # include delta f contribution from shear
     'include_deltaf_bulk': 1,       # include delta f contribution from bulk
     'include_deltaf_diffusion': 0,  # include delta f contribution from diffusion
@@ -316,6 +316,7 @@ iss_dict = {
                                                # particle numbers is reached
     'number_of_repeated_sampling': 10,         # number of repeaded sampling
     'number_of_particles_needed': 100000,      # number of hadrons to sample
+    'maximum_sampling_events': 10000,
 
     'sample_y_minus_eta_s_range': 4,    # y_minus_eta_s will be sampled
     'sample_pT_up_to': -1,  # Up to this value will pT be sampled; 
@@ -327,6 +328,9 @@ iss_dict = {
 
     'perform_decays': 0,             # flag to perform resonance decay
     'perform_checks': 0,             # flag to perform tests for the sampler
+
+    'include_spectators': 0,       # include spectators (filename: spectators.dat)
+
     'local_charge_conservation': 0,  # flag to impose local charge conservation
     'global_momentum_conservation': 0,  # flag to impose GMC
 
