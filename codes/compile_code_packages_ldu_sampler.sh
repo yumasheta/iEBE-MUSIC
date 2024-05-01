@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 
-module load cmake/3.17.2
+# module load cmake/3.17.2
+
+# module load miniconda3
+# eval "$(conda shell.bash hook)"
+eval "$(/opt/anaconda3/bin/conda shell.bash hook)"
 
 Green='\033[0;32m'
 NC='\033[0m'
@@ -14,8 +18,8 @@ esac
 number_of_cores_to_compile=$(( ${number_of_cores} > 10 ? 10 : ${number_of_cores} ))
 
 # compile 3dMCGlauber
-#echo -e "${Green}compile 3dMCGlauber ... ${NC}"
-#(
+# echo -e "${Green}compile 3dMCGlauber ... ${NC}"
+# (
 #    cd 3dMCGlauber_code
 #    ./get_LHAPDF.sh
 #    mkdir -p build
@@ -23,11 +27,11 @@ number_of_cores_to_compile=$(( ${number_of_cores} > 10 ? 10 : ${number_of_cores}
 #    cmake .. -Dlink_with_lib=OFF
 #    make -j${number_of_cores_to_compile}
 #    make install
-#)
-#status=$?
-#if [ $status -ne 0 ]; then
+# )
+# status=$?
+# if [ $status -ne 0 ]; then
 #    exit $status
-#fi
+# fi
 
 # compile IPGlasma
 # echo -e "${Green}compile IPGlasma ... ${NC}"
@@ -39,6 +43,22 @@ number_of_cores_to_compile=$(( ${number_of_cores} > 10 ? 10 : ${number_of_cores}
 # if [ $status -ne 0 ]; then
 #     exit $status
 # fi
+
+# prepare diluteGlasma runtime env
+echo -e "${Green}prepare diluteGlasma runtime environment ... ${NC}"
+(
+    cd diluteGlasma_code
+    conda env create --prefix="./conda_env" --file env.yml --yes
+    conda activate ./conda_env
+    conda env config vars set PYTHONPATH=$(pwd)
+)
+status=$?
+if [ $status -ne 0 ]; then
+    exit $status
+fi
+mkdir -p diluteGlasma
+cp diluteGlasma_code/missl/iEBE-MUSIC_run.py diluteGlasma/
+cp diluteGlasma_code/config.ini diluteGlasma/
 
 # compile KoMPoST
 #echo -e "${Green}compile KoMPoST ... ${NC}"
@@ -52,54 +72,54 @@ number_of_cores_to_compile=$(( ${number_of_cores} > 10 ? 10 : ${number_of_cores}
 #fi
 
 # # compile MUSIC
-# echo -e "${Green}compile MUSIC ... ${NC}"
-# (
-#     cd MUSIC_code
-#     mkdir -p build
-#     cd build
-#     cmake .. -Dlink_with_lib=OFF
-#     make -j${number_of_cores_to_compile}
-#     make install
-# )
-# status=$?
-# if [ $status -ne 0 ]; then
-#     exit $status
-# fi
-# mkdir -p MUSIC
-# cp MUSIC_code/example_inputfiles/IPGlasma_2D/music_input_mode_2 MUSIC/
-# cp MUSIC_code/utilities/sweeper.sh MUSIC/
-# (cd MUSIC; mkdir -p initial)
+echo -e "${Green}compile MUSIC ... ${NC}"
+(
+    cd MUSIC_code
+    mkdir -p build
+    cd build
+    cmake .. -Dlink_with_lib=OFF
+    make -j${number_of_cores_to_compile}
+    make install
+)
+status=$?
+if [ $status -ne 0 ]; then
+    exit $status
+fi
+mkdir -p MUSIC
+cp MUSIC_code/example_inputfiles/IPGlasma_2D/music_input_mode_2 MUSIC/
+cp MUSIC_code/utilities/sweeper.sh MUSIC/
+(cd MUSIC; mkdir -p initial)
 
 # # download iSS particle sampler
-# echo -e "${Green}compile iSS ... ${NC}"
-# (
-#     cd iSS_code
-#     mkdir -p build
-#     cd build
-#     cmake .. -Dlink_with_lib=OFF
-#     make -j${number_of_cores_to_compile}
-#     make install
-# )
-# status=$?
-# if [ $status -ne 0 ]; then
-#     exit $status
-# fi
+echo -e "${Green}compile iSS ... ${NC}"
+(
+    cd iSS_code
+    mkdir -p build
+    cd build
+    cmake .. -Dlink_with_lib=OFF
+    make -j${number_of_cores_to_compile}
+    make install
+)
+status=$?
+if [ $status -ne 0 ]; then
+    exit $status
+fi
 
 # download UrQMD afterburner
-# echo -e "${Green}compile UrQMD ... ${NC}"
-# (
-#     cd urqmd_code
-#     make -j${number_of_cores_to_compile}
-# )
-# status=$?
-# if [ $status -ne 0 ]; then
-#     exit $status
-# fi
-# mkdir -p osc2u
-# cp urqmd_code/osc2u/osc2u.e osc2u/
-# mkdir -p urqmd
-# cp urqmd_code/urqmd/runqmd.sh urqmd/
-# cp urqmd_code/urqmd/uqmd.burner urqmd/
+echo -e "${Green}compile UrQMD ... ${NC}"
+(
+    cd urqmd_code
+    make -j${number_of_cores_to_compile}
+)
+status=$?
+if [ $status -ne 0 ]; then
+    exit $status
+fi
+mkdir -p osc2u
+cp urqmd_code/osc2u/osc2u.e osc2u/
+mkdir -p urqmd
+cp urqmd_code/urqmd/runqmd.sh urqmd/
+cp urqmd_code/urqmd/uqmd.burner urqmd/
 
 
 # # download hadronic afterner
