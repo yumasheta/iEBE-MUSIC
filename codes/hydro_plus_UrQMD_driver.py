@@ -218,6 +218,9 @@ def prepare_surface_files_for_urqmd(final_results_folder, hydro_folder_name,
     """This function prepares hydro surface for hadronic casade"""
     surface_file = glob(
         path.join(final_results_folder, hydro_folder_name, "surface*.dat"))
+    print(f"[{time.asctime()}] Converting hydro surface files to hdf5", flush=True)
+    print(f"Found {surface_file=}")
+
     for iev in range(n_urqmd):
         hydro_surface_folder = "UrQMDev_{0:d}/hydro_event".format(iev)
         if path.exists(hydro_surface_folder):
@@ -227,6 +230,7 @@ def prepare_surface_files_for_urqmd(final_results_folder, hydro_folder_name,
             path.abspath(surface_file[0]),
             path.join(hydro_surface_folder, "surface.dat")),
              shell=True)
+        print(f"Linked to {path.join(hydro_surface_folder, 'surface.dat')}")
         shutil.copy(
             path.join(final_results_folder, hydro_folder_name, "music_input"),
             hydro_surface_folder)
