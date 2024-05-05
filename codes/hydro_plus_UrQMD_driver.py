@@ -89,6 +89,24 @@ def get_initial_condition(database, initial_type, iev, seed_add,
     elif initial_type == "3DMCGlauber_consttau":
         file_name = fecth_an_3DMCGlauber_smooth_event(database, iev)
         return file_name
+    elif initial_type == "diluteGlasma":
+        file_name = f"Initial_Distribution_tau-{float(time_stamp_str):.3f}.dat"
+        diluteGlasma_folder_name = f"diluteGlasma_results_{iev}"
+        res_path = path.join(path.abspath(final_results_folder),
+                             diluteGlasma_folder_name)
+
+        # check existing events ...
+        if not path.exists(path.join(res_path, file_name)):
+            print(f"No diluteGlasma results found in {res_path}")
+            run_diluteGlasma(iev)
+            collect_diluteGlasma_event(final_results_folder, iev)
+        else:
+            print(
+                f"diluteGlasma event {iev}: {file_name} exists in:\n{res_path}")
+            print("No need to rerun ...")
+
+        connect_diluteGlasma_event(final_results_folder, iev, file_name)
+        return file_name
     else:
         print("\U0001F6AB  "
               + "Do not recognize the initial condition type: {}".format(
@@ -131,6 +149,75 @@ def connect_ipglasma_event(final_results_folder, initial_type, event_id,
         call("ln -s {0:s} {1:s}".format(path.join(res_path, filename),
                                         kompost_initial_file),
              shell=True)
+
+
+def run_diluteGlasma(iev):
+    """Run diluteGlasma."""
+    print(f"\U0001F4A5  [{time.asctime()}] Run diluteGlasma ... ", flush=True)
+    call("bash ./run_diluteGlasma.sh {}".format(iev), shell=True)
+
+
+def collect_diluteGlasma_event(final_results_folder, event_id):
+    diluteGlasma_folder_name = f"diluteGlasma_results_{event_id}"
+    res_path = path.join(path.abspath(final_results_folder),
+                         diluteGlasma_folder_name)
+    if path.exists(res_path):
+        shutil.rmtree(res_path)
+    shutil.move(path.join('diluteGlasma', 'diluteGlasma_results'), res_path)
+
+    # zip files into hdf5
+    diluteGlasma_info_filepattern = [
+        "momentum_density_moments.npz",
+        "momentum_anisotropy.npz",
+        "eccentricity_emt.npz",
+        "eccentricity_epsilon.npz",
+    ]
+
+    print(f"[{time.asctime()}] Converting diluteGlasma results to hdf5",
+          flush=True)
+
+    # make folder to host results going into h5 file
+    diluteGlasma_h5_folder = path.join(res_path, "diluteGlasma_h5_files")
+    shutil.rmtree(diluteGlasma_h5_folder,
+                  ignore_errors=True)  # Removes all the subdirectories!
+    mkdir(diluteGlasma_h5_folder)
+
+    # extract and move results to 'diluteGlasma_h5_files' folder
+    for ipattern in diluteGlasma_info_filepattern:
+        for ifile in glob(path.join(res_path, 'energy_momentum', ipattern)):
+            if path.isfile(ifile):
+                data = np.load(ifile)
+                for key in data.files:
+                    if "bias" in key or "std" in key:
+                        continue
+                    np.savez_compressed(path.join(
+                        diluteGlasma_h5_folder,
+                        f"{path.splitext(path.basename(ifile))[0]}_{key}.npz"),
+                                        key=data[key])
+    hf = h5py.File(
+        f"{path.join(path.abspath(final_results_folder), diluteGlasma_folder_name+'.h5')}",
+        "w")
+    gtemp = hf.create_group(f"{diluteGlasma_folder_name}")
+    for file_path in glob(path.join(diluteGlasma_h5_folder, "*")):
+        file_name = path.basename(file_path)
+        # print("Converting {} to hdf5".format(file_name), flush=True)
+        arr_npz = np.load(file_path)
+        dtemp = arr_npz[arr_npz.files[0]]
+        gtemp.create_dataset(f"{file_name}",
+                             data=dtemp,
+                             compression="gzip",
+                             compression_opts=9)
+    hf.close()
+
+    # remove the results that have been zipped
+    shutil.rmtree(diluteGlasma_h5_folder, ignore_errors=True)
+
+
+def connect_diluteGlasma_event(final_results_folder, event_id, filename):
+    diluteGlasma_folder_name = f"diluteGlasma_results_{event_id}"
+    res_path = path.join(path.abspath(final_results_folder),
+                         diluteGlasma_folder_name)
+    call(f"ln -sf {path.join(res_path, filename)} MUSIC/initial/", shell=True)
 
 
 def run_hydro_event(final_results_folder, event_id):
@@ -536,6 +623,10 @@ def remove_unwanted_outputs(final_results_folder,
         ipglasmafolder = path.join(final_results_folder,
                                    "ipglasma_results_{}".format(event_id))
         shutil.rmtree(ipglasmafolder, ignore_errors=True)
+        # also do for diluteGlasma
+        shutil.rmtree(path.join(final_results_folder,
+                                f"diluteGlasma_results_{event_id}"),
+                      ignore_errors=True)
 
     if not save_kompost:
         kompostfolder = path.join(final_results_folder,
@@ -740,7 +831,7 @@ if __name__ == "__main__":
         exit(0)
 
     known_initial_types = [
-        "IPGlasma", "IPGlasma+KoMPoST", "3DMCGlauber_dynamical",
+        "IPGlasma", "IPGlasma+KoMPoST", "3DMCGlauber_dynamical", "diluteGlasma",
         "3DMCGlauber_consttau"
     ]
     if INITIAL_CONDITION_TYPE not in known_initial_types:

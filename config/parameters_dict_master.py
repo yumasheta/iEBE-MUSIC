@@ -5,18 +5,20 @@
 
 from os import path, makedirs
 import sys
+import time
 import argparse
 
 # control parameters
 control_dict = {
-    'initial_state_type': "3DMCGlauber_dynamical",  # options: IPGlasma, IPGlasma+KoMPoST,
+    'initial_state_type': "3DMCGlauber_dynamical",  # options: IPGlasma, IPGlasma+KoMPoST, diluteGlasma,
                                                     #          3DMCGlauber_dynamical, 3DMCGlauber_consttau
-    'walltime': "10:00:00",  # walltime to run
-    'use_iS3D': False,               # flag to use iS3D as sampler
-    'save_ipglasma_results': False,   # flag to save IPGlasma results
-    'save_kompost_results': False,    # flag to save kompost results
-    'save_hydro_surfaces': False,     # flag to save hydro surfaces
-    'save_UrQMD_files': False,        # flag to save UrQMD files
+    'walltime': "10:00:00",              # walltime to run
+    'use_iS3D': False,                   # flag to use iS3D as sampler
+    'save_ipglasma_results': False,      # flag to save IPGlasma results
+    'save_diluteGlasma_results': False,  # flag to save diluteGlasma results
+    'save_kompost_results': False,       # flag to save kompost results
+    'save_hydro_surfaces': False,        # flag to save hydro surfaces
+    'save_UrQMD_files': False,           # flag to save UrQMD files
 }
 
 
@@ -99,6 +101,40 @@ ipglasma_dict = {
     'writeOutputsToHDF5': 0
 }
 
+# diluteGlasma
+diluteGlasma_dict = {
+    "nucleus.gamma": 100,  # float       Lorentz contraction factor for collision energy
+    "nucleus.r": 6.38,  # float[fm]      Woods-Saxon radius parameter.
+    "nucleus.d": 0.535,  # float[fm]      Woods-Saxon depth parameter.
+    "nucleus.nt": 256,  # int            Transverse lattice size for nuclei.
+    "nucleus.nl": 128,  # int            Longitudinal lattice size for nuclei.
+    "nucleus.mu": 1.0,  # float[GeV]    McLerran-Venugopalan scale \mu.
+    "nucleus.ir": 0.2,  # float[GeV]    IR cutoff.
+    "nucleus.uv": 10.0,  # float[GeV]    Transverse UV cutoff.
+    "nucleus.uvl": 0.0,  # float[GeV]   Longitudinal UV cutoff.
+    "nucleus.xi_ratio": 0.5,  # float    Longitudinal correlation length ratio to s and r. Must be <= 2.0!
+    "integration.xt_cells": 48,  # int  Minimum size of transverse lattice for field strength tensor.
+    "integration.xt_boundary": -1,  # float[fm] padding for field strength tensor grid. -1 -> automatic
+    # [float][fm] Tau coordinate to evaluate field strength tensor at. Only the first value is used, if a list is given.
+    "integration.taus": '[0.4]',
+    # [float ...] List of space separated eta coordinates to evaluate field strength tensor at.
+    "integration.etas": '[-1.5 -1.25 -1. -0.75 -0.5 -0.25 0. 0.25 0.5 0.75 1. 1.25]',
+    "integration.time_offset": 0.06915,  # float[fm] Shift of the coordinate system origin in t-direction.
+    "integration.b_ratio": 1.0,  # float Impact parameter as a ratio to s and r.
+    # float Target standard deviation to reach with variance driven adaptive integration.
+    "integration.std_target": 0.05,
+    "integration.n_samples": 3000,  # int Number of MC samples
+    "integration.max_bunches": 40,  # int Maximum number of bunches to collect for variance driven adaptive integration.
+    # int   Number of bunches to collect at each step of variance driven adaptive integration.
+    "integration.bunches": 10,
+    'integration.seed_step': 100000,  # each new rand seed to use is event_seed + seed_step. keep larger than max event number
+    "music.initial_profile": 900,  # {900, 8, 9, 91, 92, 93} Control format of generated MUSIC-hydro input file.
+    # float[fm]  Size of zero-padding applied in the transverse plane when saving MUSIC-hydro input file.
+    "music.padding": 3.0,
+    "output.emt_milne": True,  # must be True
+    "output.shear_stress_milne": True,  # must be True
+}
+
 
 # 3DMCGlauber model
 mcglauber_dict = {
@@ -176,11 +212,12 @@ kompost_dict = {
 music_dict = {
     'echo_level':  1,       # control the mount of message output to screen
     'mode': 2,              # MUSIC running mode 2: Evolution only.
-    'Initial_profile': 9,   # type of initial condition 
+    'Initial_profile': 9,   # type of initial condition
                             # 9: IPGlasma (full Tmunu),
                             #   -- 91: e and u^\mu,
                             #   -- 92: e only,
                             #   -- 93: e, u^\mu, and pi^\munu
+                            # 900: diluteGlasma (full Tmunu): e, u^\mu, and pi^\munu in 3D (eta, x, y)
                             # 11: 3dMCGlauber initial condition at a constant tau surface
                             #     based on the nuclear thickness funciton TA and TB
                             #   -- 111: second parameterization of eta profile
@@ -601,6 +638,7 @@ hadronic_afterburner_toolkit_dict = {
 
 Parameters_list = [
     (ipglasma_dict, "input", 3),
+    (diluteGlasma_dict, "config.ini", 5),
     (kompost_dict, "setup.ini", 4),
     (mcglauber_dict, "input", 0),
     (music_dict, "music_input_mode_2", 2),
@@ -611,6 +649,7 @@ Parameters_list = [
 
 path_list = [
     'model_parameters/IPGlasma/',
+    'model_parameters/diluteGlasma/',
     'model_parameters/KoMPoST/',
     'model_parameters/3dMCGlauber/',
     'model_parameters/MUSIC/',
@@ -657,6 +696,30 @@ def update_parameters_dict(par_dict_path, ran_seed):
             parameters_dict.music_dict['s_factor'] = 1.0
             parameters_dict.music_dict['Initial_time_tau_0'] = (
                     kompost_dict['KoMPoSTInputs']['tOut'])
+
+    elif initial_condition_type == "diluteGlasma":
+        if ran_seed == -1:
+            # apparently this case shall use system time
+            new_seed = int(time.time())
+        else:
+            new_seed = ran_seed
+
+        parameters_dict.diluteGlasma_dict['nucleus.seed_a'] = new_seed*10
+        parameters_dict.diluteGlasma_dict['nucleus.seed_b'] = new_seed*10 + 1
+        parameters_dict.diluteGlasma_dict['integration.seed1'] = new_seed*10
+        parameters_dict.diluteGlasma_dict['integration.seed2'] = new_seed*10 + 1
+
+        tau_string = parameters_dict.diluteGlasma_dict['integration.taus']
+        tau_val = f"{float(tau_string.strip('[]').split()[0]):.3f}"
+        if 'Initial_Distribution_input_filename' not in parameters_dict.music_dict:
+            parameters_dict.music_dict[
+                'Initial_Distribution_input_filename'] = (
+                f"initial/Initial_Distribution_tau-{tau_val}.dat")
+        if "Initial_time_tau_0" not in parameters_dict.music_dict:
+            parameters_dict.music_dict['Initial_time_tau_0'] = tau_val
+        if "s_factor" not in parameters_dict.music_dict:
+            parameters_dict.music_dict['s_factor'] = 1.0
+
     else:
         mcglauber_dict.update(parameters_dict.mcglauber_dict)
 
@@ -680,7 +743,7 @@ def update_parameters_dict(par_dict_path, ran_seed):
         parameters_dict.iss_dict['hydro_mode'] = 2
         parameters_dict.is3d_dict['dimension'] = 3
 
-
+    diluteGlasma_dict.update(parameters_dict.diluteGlasma_dict)
     music_dict.update(parameters_dict.music_dict)
     iss_dict.update(parameters_dict.iss_dict)
     iss_dict['randomSeed'] = ran_seed
@@ -710,6 +773,7 @@ def output_parameters_to_files(workfolder="."):
         output_folder = path.join(workfolder, path_list[idict])
         if not path.exists(output_folder):
             makedirs(output_folder)
+        diluteGlasma_sections = {}
         f = open(path.join(output_folder, fname), "w")
         for key_name in parameters_dict:
             if itype in (0, 2):
@@ -730,12 +794,21 @@ def output_parameters_to_files(workfolder="."):
                 for subkey_name in parameters_dict[key_name]:
                     f.write("{parameter_name} = {parameter_value}\n".format(
                         parameter_name=subkey_name,
-                        parameter_value=parameters_dict[key_name][subkey_name])
-                    )
+                        parameter_value=parameters_dict[key_name][subkey_name]))
+            elif itype == 5:
+                section, param = key_name.split(".")
+                section_dict = diluteGlasma_sections.setdefault(section, {})
+                section_dict[param] = parameters_dict[key_name]
         if itype == 2:
             f.write("EndOfData")
         elif itype == 3:
             f.write("EndOfFile")
+        elif itype == 5:
+            for s, sp in diluteGlasma_sections.items():
+                f.write(f"[{s}]\n")
+                f.writelines("\n".join(f'{k} = {v}' for k, v in sp.items()))
+                f.write("\n")
+
         f.close()
 
 

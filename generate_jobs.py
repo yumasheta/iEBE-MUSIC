@@ -6,7 +6,8 @@ from os import path, mkdir
 import shutil
 import subprocess
 import argparse
-from math import ceil
+import re
+from math import ceil, log10
 from glob import glob
 
 centrality_list = [(0.00, 0.15, '0-5', 0.05), (0.15, 0.30, '5-10', 0.05),
@@ -17,7 +18,7 @@ centrality_list = [(0.00, 0.15, '0-5', 0.05), (0.15, 0.30, '5-10', 0.05),
                    (0.95, 1.00, '90-100', 0.10)]
 
 known_initial_types = [
-    "IPGlasma", "IPGlasma+KoMPoST", "3DMCGlauber_dynamical",
+    "IPGlasma", "IPGlasma+KoMPoST", "diluteGlasma", "3DMCGlauber_dynamical",
     "3DMCGlauber_consttau"
 ]
 
@@ -246,6 +247,46 @@ mv run.err $results_folder/
 )
 """)
     script.close()
+
+
+def generate_script_diluteGlasma(folder_name, nthreads, cluster_name, code_path):
+    results_folder = 'diluteGlasma_results'
+    script = open(path.join(folder_name, "run_diluteGlasma.sh"), "w")
+    script.write("""#!/bin/bash
+set -e
+""")
+    if cluster_name == "local":
+        script.write("\neval \"$('/opt/anaconda3/bin/conda' 'shell.bash' 'hook')\"\n")
+
+    # TODO: add VSC
+
+    script.write(f"""
+conda activate {path.join(code_path, 'diluteGlasma_code', 'conda_env')}
+
+results_folder={results_folder}
+evid=$1
+(
+  cd diluteGlasma
+  mkdir -p $results_folder
+  rm -fr $results_folder/*
+
+  export PYTHONUNBUFFERED=y
+  export MY_NUMBA_TARGET=cuda
+  export NUMBA_NUM_THREADS={nthreads}
+
+  python iEBE-MUSIC_run.py --config=config.ini 1> run.log 2> run.err
+
+  echo "Moving results into $results_folder"
+  mv run.log $results_folder/
+  mv run.err $results_folder/
+  mv music_input/* $results_folder/
+  rmdir music_input
+  mv coordinate_ranges $results_folder/
+  mv energy_momentum $results_folder/
+  mv field_strength $results_folder/
+  mv nuclei $results_folder/
+)
+""")
 
 
 def generate_script_kompost(folder_name, nthreads, cluster_name):
@@ -622,6 +663,13 @@ def generate_event_folders(initial_condition_database, initial_condition_type,
                                   'ipglasma_code/{}'.format(link_i))),
                     path.join(event_folder, "ipglasma/{}".format(link_i))),
                                 shell=True)
+        elif initial_condition_type == "diluteGlasma":
+            generate_script_diluteGlasma(event_folder, n_threads, cluster_name,
+                                         code_path)
+            shutil.copytree(path.join(code_path, "diluteGlasma"),
+                            path.join(event_folder, 'diluteGlasma'))
+            shutil.copyfile(path.join(param_folder, 'diluteGlasma', 'config.ini'),
+                            path.join(event_folder, 'diluteGlasma', 'config.ini'))
 
     generate_full_job_script(cluster_name, event_folder,
                              initial_condition_database, initial_condition_type,
@@ -881,6 +929,34 @@ def main():
                 parameter_dict.ipglasma_dict['database_name_pattern'])
         IPGlasma_time_stamp = str(
             parameter_dict.music_dict['Initial_time_tau_0'])
+    elif initial_condition_type == "diluteGlasma":
+        # diluteGlasma initial conditions are shared for all n_jobs and n_hydro_per_job
+        # as the seed is fixed in the model_parameters dictionary at the time this script runs
+        # disallow both =/= 1
+        if n_jobs != 1:
+            print(
+                "\U000026A0  "
+                f"{n_jobs=} not compatible with diluteGlasma initial conditions. Set n_jobs=1\n"
+                "(diluteGlasma initial conditions are identical for all events)",
+                file=sys.stderr)
+            exit(4)
+        if n_hydro_per_job != 1:
+            print(
+                "\U000026A0  "
+                f"{n_hydro_per_job=} not compatible with diluteGlasma initial conditions. Set n_hydro_per_job=1\n"
+                "(diluteGlasma initial conditions are identical for all events)",
+                file=sys.stderr)
+            exit(4)
+
+        initial_condition_database = "self"
+        if 'Initial_time_tau_0' in parameter_dict.music_dict and 'integration.taus' in parameter_dict.diluteGlasma_dict:
+            if f"{parameter_dict.music_dict['Initial_time_tau_0']:.3f}" != f"{float(parameter_dict.diluteGlasma_dict['integration.taus'].strip('[]').split()[0]):.3f}":
+                print(
+                    "switching times for diluteGlasma input and MUSIC-hydro output don't match",
+                    file=sys.stderr)
+                exit(1)
+        IPGlasma_time_stamp = parameter_dict.diluteGlasma_dict[
+            'integration.taus'].strip('[]').split()[0]
     elif initial_condition_type == "IPGlasma+KoMPoST":
         if parameter_dict.ipglasma_dict['type'] == "self":
             initial_condition_database = "self"
@@ -916,7 +992,11 @@ def main():
     code_path = path.join(code_package_path, "codes")
     if not args.nocopy:
         code_path = path.join(working_folder_name, "codes")
-        shutil.copytree("{}/codes".format(code_package_path), code_path)
+        shutil.copytree(
+            "{}/codes".format(code_package_path),
+            code_path,
+            # must not copy any conda envs
+            ignore=shutil.ignore_patterns("conda*/*", "conda*"))
 
     if args.bayes_file != "":
         args.bayes_file = path.join(path.abspath("."), args.bayes_file)
@@ -992,6 +1072,9 @@ def main():
         if (initial_condition_type in ("IPGlasma", "IPGlasma+KoMPoST")
                 and initial_condition_database == "self"):
             ipglasma_flag = parameter_dict.control_dict['save_ipglasma_results']
+        elif initial_condition_type == "diluteGlasma":
+            # re-use this flag for same effect
+            ipglasma_flag = parameter_dict.control_dict['save_diluteGlasma_results']
         kompost_flag = False
         if initial_condition_type == "IPGlasma+KoMPoST":
             kompost_flag = parameter_dict.control_dict['save_kompost_results']
