@@ -709,6 +709,11 @@ def generate_event_folders(initial_condition_database, initial_condition_type,
 
     generate_script_analyze_spvn(event_folder, cluster_name, HBT_flag)
 
+    # generate unique seeds for fixed -seed option
+    # this solves 10^{seed_factor} > n_urqmd_per_hydro
+    # the unique seeds are then: seed*seed_factor + iev
+    seed_factor = 10**ceil(log10(n_urqmd_per_hydro))
+
     for iev in range(n_urqmd_per_hydro):
         sub_event_folder = path.join(working_folder,
                                      'event_{0:d}'.format(event_id),
@@ -719,6 +724,19 @@ def generate_event_folders(initial_condition_database, initial_condition_type,
         mkdir(path.join(sub_event_folder, 'iSS'))
         shutil.copyfile(path.join(param_folder, 'iSS/iSS_parameters.dat'),
                         path.join(sub_event_folder, 'iSS/iSS_parameters.dat'))
+        with open(path.join(sub_event_folder, 'iSS/iSS_parameters.dat'), "r") as f:
+            iss_params = f.read()
+        iss_seed = int(
+            re.search(r"^randomSeed = (.+)$", iss_params,
+                      re.MULTILINE).group(1))
+        if iss_seed != -1:
+            iss_seed = iss_seed*seed_factor + iev
+            iss_params = re.sub(r"^randomSeed = (.+)$",
+                                f"randomSeed = {iss_seed}",
+                                iss_params,
+                                flags=re.MULTILINE)
+            with open(path.join(sub_event_folder, 'iSS/iSS_parameters.dat'), "w") as f:
+                f.write(iss_params)
         for link_i in ['iSS_tables', 'iSS.e']:
             subprocess.call("ln -s {0:s} {1:s}".format(
                 path.abspath(path.join(code_path,
@@ -729,6 +747,19 @@ def generate_event_folders(initial_condition_database, initial_condition_type,
         mkdir(path.join(sub_event_folder, 'iS3D'))
         shutil.copyfile(path.join(param_folder, 'iS3D/iS3D_parameters.dat'),
                         path.join(sub_event_folder, 'iS3D/iS3D_parameters.dat'))
+        with open(path.join(sub_event_folder, 'iS3D/iS3D_parameters.dat'), "r") as f:
+            is3d_params = f.read()
+        is3d_seed = int(
+            re.search(r"^sampler_seed = (.+)$", is3d_params,
+                      re.MULTILINE).group(1))
+        if is3d_seed != -1:
+            is3d_seed = is3d_seed*seed_factor + iev
+            is3d_params = re.sub(r"^sampler_seed = (.+)$",
+                                 f"sampler_seed = {is3d_seed}",
+                                 is3d_params,
+                                 flags=re.MULTILINE)
+            with open(path.join(sub_event_folder, 'iS3D/iS3D_parameters.dat'), "w") as f:
+                f.write(is3d_params)
         for link_i in ['tables', 'PDG', 'deltaf_coefficients', 'iS3D.e']:
             subprocess.call("ln -s {0:s} {1:s}".format(
                 path.abspath(path.join(code_path,
@@ -755,6 +786,21 @@ def generate_event_folders(initial_condition_database, initial_condition_type,
                           'hadronic_afterburner_toolkit/parameters.dat'),
                 path.join(sub_event_folder,
                           'hadronic_afterburner_toolkit/parameters.dat'))
+            with open(path.join(sub_event_folder,
+                                'hadronic_afterburner_toolkit/parameters.dat'), "r") as f:
+                ha_params = f.read()
+            ha_seed = int(
+                re.search(r"^randomSeed = (.+)$", ha_params,
+                          re.MULTILINE).group(1))
+            if ha_seed != -1:
+                ha_seed = ha_seed*seed_factor + iev
+                ha_params = re.sub(r"^randomSeed = (.+)$",
+                                   f"randomSeed = {ha_seed}",
+                                   ha_params,
+                                   flags=re.MULTILINE)
+                with open(path.join(sub_event_folder,
+                                    'hadronic_afterburner_toolkit/parameters.dat'), "w") as f:
+                    f.write(ha_params)
             for link_i in ['hadronic_afterburner_tools.e', 'EOS']:
                 subprocess.call("ln -s {0:s} {1:s}".format(
                     path.abspath(
