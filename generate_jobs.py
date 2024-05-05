@@ -789,7 +789,7 @@ def create_a_working_folder(workfolder_path):
     except FileExistsError:
         print("The folder {} exists, do you want to delete it?".format(
             workfolder_path))
-        user_answer = input()
+        user_answer = input("[y/N]:  ")
         if 'y' in user_answer:
             shutil.rmtree(workfolder_path)
             mkdir(workfolder_path)

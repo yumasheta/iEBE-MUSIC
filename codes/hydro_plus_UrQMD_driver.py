@@ -518,8 +518,8 @@ def zip_hydro_results_into_hdf5(final_results_folder, event_id):
         file_list = glob(path.join(hydro_h5_folder, "*"))
         for file_path in file_list:
             file_name = file_path.split("/")[-1]
-            print("Converting {} to hdf5".format(file_name),
-                  flush=True)
+            # print("Converting {} to hdf5".format(file_name),
+            #   flush=True)
             dtemp = np.loadtxt(file_path)
             h5data = gtemp.create_dataset("{0}".format(file_name),
                                           data=dtemp,
